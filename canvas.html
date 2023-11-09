@@ -1,28 +1,72 @@
-<div id="stage">
-    <canvas id="ui-layer" width="500" height="500"></canvas>
-    <canvas id="game-layer" width="480" height="320"></canvas>
-    <canvas id="background-layer" width="480" height="320"></canvas>
-  </div>
-  
-  <style>
-    #stage {
-      width: 480px;
-      height: 320px;
-      position: relative;
-      border: 2px solid black;
-    }
-  
-    canvas {
-      position: absolute;
-    }
-    #ui-layer {
-      background-color: red;
-      z-index: -1;
-    }
-    #game-layer {
-      z-index: 2;
-    }
-    #background-layer {
-      z-index: 1;
-    }
-  </style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG to Canvas</title>
+</head>
+<body>
+    <canvas id="myCanvas" width="192" height="192"></canvas>
+
+    <script>
+        const canvas = document.getElementById("myCanvas");
+        const ctx = canvas.getContext("2d");
+
+        ctx.save();
+
+        ctx.beginPath();
+        ctx.ellipse(96, 96, 96, 96, 0, 0, 2 * Math.PI);
+        ctx.fillStyle = createGradient(ctx, "#Gradient-0");
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.ellipse(96, 96, 96, 96, 0, 0, 2 * Math.PI);
+        ctx.fillStyle = createGradient(ctx, "#Gradient-1");
+        ctx.globalAlpha = 0.8;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.ellipse(96, 96, 76, 76, 0, 0, 2 * Math.PI);
+        ctx.fillStyle = "#0f2439";
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.ellipse(96, 96, 79, 79, 0, 0, 2 * Math.PI);
+        ctx.fillStyle = createGradient(ctx, "#Gradient-2");
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.ellipse(96, 96, 79, 79, 0, 0, 2 * Math.PI);
+        ctx.fillStyle = createGradient(ctx, "#Gradient-3");
+        ctx.globalAlpha = 0.8;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.closePath();
+        ctx.restore();
+
+        function createGradient(context, gradientId) {
+            const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+
+            if (gradientId === "#Gradient-0") {
+                gradient.addColorStop(0, "#196df3");
+                gradient.addColorStop(1, "#25273d");
+            } else if (gradientId === "#Gradient-1") {
+                gradient.addColorStop(0, "#594de7");
+                gradient.addColorStop(1, "#7b61ff");
+            } else if (gradientId === "#Gradient-2") {
+                gradient.addColorStop(0, "#1a6cf2");
+                gradient.addColorStop(1, "#000");
+            } else if (gradientId === "#Gradient-3") {
+                gradient.addColorStop(0, "#ffffff");
+                gradient.addColorStop(1, "#000000");
+            }
+            return gradient;
+        }
+    </script>
+</body>
+</html>
