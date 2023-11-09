@@ -22,7 +22,8 @@ export const drawCircle = ({
     fillStyle
 }:Circle): void => {
     if(canvas){
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.width = canvas.width
+        canvas.height = canvas.height
         ctx.beginPath();
         ctx.arc(arc.x, arc.y, arc.radius, arc.startAngle, arc.endAngle, arc.clockwise);
         ctx.fillStyle = fillStyle;
