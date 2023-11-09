@@ -27,9 +27,6 @@ function App() {
         drawCircle(draw1);
       }
     }
-  }, []);
-
-  useEffect(() => {
     const canvas2 = document.getElementById('canvas2') as HTMLCanvasElement;
     if (canvas2) {
       const ctx2 = canvas2.getContext('2d');
@@ -42,7 +39,7 @@ function App() {
           endAngle: Math.PI * 2,
         };
 
-        const fillStyle2 = 'blue';
+        const fillStyle2 = 'yellow';
 
         const draw2: Circle = {
           canvas: canvas2,
@@ -51,10 +48,24 @@ function App() {
           fillStyle: fillStyle2,
         };
 
-        drawCircle(draw2);
+        ctx2.beginPath()
+        ctx2.arc
+        (
+          arc2.x, 
+          arc2.y, 
+          arc2.radius, 
+          arc2.startAngle, 
+          arc2.endAngle, 
+          arc2.clockwise
+        )
+
+        ctx2.fillStyle = fillStyle2
+        ctx2.fill()
+        ctx2.closePath()
       }
     }
-  },[])
+  }, []);
+
 
   return (
     <div>
