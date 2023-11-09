@@ -1,0 +1,28 @@
+<div id="stage">
+    <canvas id="ui-layer" width="500" height="500"></canvas>
+    <canvas id="game-layer" width="480" height="320"></canvas>
+    <canvas id="background-layer" width="480" height="320"></canvas>
+  </div>
+  
+  <style>
+    #stage {
+      width: 480px;
+      height: 320px;
+      position: relative;
+      border: 2px solid black;
+    }
+  
+    canvas {
+      position: absolute;
+    }
+    #ui-layer {
+      background-color: red;
+      z-index: -1;
+    }
+    #game-layer {
+      z-index: 2;
+    }
+    #background-layer {
+      z-index: 1;
+    }
+  </style>
