@@ -33,4 +33,5 @@ export const drawCircle = ({
     else {
         throw new Error("Canvas element is null")
     }
+    
 }
