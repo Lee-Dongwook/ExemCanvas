@@ -3,46 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    canvas {
-      border: 1px solid #000;
-    }
-  </style>
 </head>
 <body>
   <canvas id="canvas" width="300" height="300"></canvas>
+  <script src="drawCircle.js"></script>
+  <script src="drawCircle.d.ts"></script>
   <script>
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     let offsetDistance = 0;
     let rotation = 0;
 
-    function draw() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.beginPath();
-      ctx.arc(150, 150, 20, 0, Math.PI * 2, true);
-      ctx.fillStyle = 'yellow';
-      ctx.fill();
-      ctx.closePath();
+    const arc = {
+        x: 100,
+        y: 100,
+        radius: 20, 
+        startAngle: 0,
+        endAngle: Math.PI * 2
     }
 
-    function animate() {
-      offsetDistance += 0.5; 
-      rotation += 0.1; 
+    const fillStyle = "red"
 
-      if (offsetDistance > 100) {
-        offsetDistance = 0;
-      }
+    drawCircle({canvas, ctx, arc, fillStyle})
 
-      ctx.style.offsetDistance = offsetDistance + '%';
-      ctx.style.transform = `rotate(${rotation}deg)`;
-
-      draw();
-
-      requestAnimationFrame(animate);
-    }
-
-    animate();
   </script>
 </body>
 </html>
