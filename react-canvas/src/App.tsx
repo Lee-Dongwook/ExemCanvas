@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { drawCircle, type Arc, type Circle } from './drawCircle';
+import { drawCircle, type Arc, type Circle } from './canvas/drawCircle';
 
 function App() {
   useEffect(() => {
