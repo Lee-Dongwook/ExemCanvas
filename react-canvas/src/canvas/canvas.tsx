@@ -10,20 +10,10 @@ const Canvas = props => {
     const canvas = canvasRef.current as unknown as HTMLCanvasElement
     if(canvas){
         const context = canvas.getContext('2d')
-        let frameCount = 0
-        let animationFrameId
-        
         const render = () => {
-          frameCount++
-          draw(context, frameCount)
-          animationFrameId = window.requestAnimationFrame(render)
+          draw(context)
         }
         render()
-
-    return () => {
-        window.cancelAnimationFrame(animationFrameId)
-    }
-    
     }
   }, [draw])
   

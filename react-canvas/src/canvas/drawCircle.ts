@@ -1,37 +1,12 @@
-export interface Arc {
-    x: number
-    y: number
-    radius: number
-    startAngle: number
-    endAngle: number
-    clockwise?: boolean
-}
-
-export interface Circle {
-    canvas: HTMLCanvasElement | null
+interface Circle {
     ctx: CanvasRenderingContext2D
-    arc: Arc
-    fillStyle: string
+    frameCount: number
 }
 
-
-export const drawCircle = ({
-    canvas,
-    ctx,
-    arc,
-    fillStyle
-}:Circle): void => {
-    if(canvas){
-        canvas.width = canvas.width
-        canvas.height = canvas.height
-        ctx.beginPath();
-        ctx.arc(arc.x, arc.y, arc.radius, arc.startAngle, arc.endAngle, arc.clockwise);
-        ctx.fillStyle = fillStyle;
-        ctx.fill();
-        ctx.closePath();
-    }
-    else {
-        throw new Error("Canvas element is null")
-    }
-    
+export const drawCircle = (ctx, frameCount = 11) => {
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+    ctx.fillStyle = '#000000'
+    ctx.beginPath()
+    ctx.arc(50, 100, 20*Math.sin(frameCount*0.05)**2, 0, 2*Math.PI)
+    ctx.fill()
 }
