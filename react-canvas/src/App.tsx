@@ -1,26 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {useEffect} from 'react'
+import { drawCircle, type Arc, type Circle } from './drawCircle'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+
+  useEffect(() => {
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement
+    if(canvas){
+      const ctx = canvas.getContext('2d')
+      if(ctx){
+        const arc: Arc = {
+          x: 100,
+          y: 100,
+          radius: 20, 
+          startAngle: 0,
+          endAngle: Math.PI * 2
+        }
+  
+        const fillStyle = 'red'
+  
+        const draw: Circle = {
+          canvas,
+          ctx,
+          arc,
+          fillStyle
+        }
+
+        drawCircle(draw)
+      }
+    }
+  }, [])
+
+  return(
+    <div>
+      <canvas id='canvas'></canvas>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
