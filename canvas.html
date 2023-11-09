@@ -1,0 +1,35 @@
+<div>
+  <canvas id="canvas_1"></canvas>
+  <canvas id="canvas_2"></canvas>
+  <canvas id="canvas_3"></canvas>
+</div>
+
+<script type="application/javascript">
+    function draw(canvasId){
+        const canvas = document.getElementById(canvasId)
+        if(canvas.getContext){
+            const ctx = canvas.getContext("2d")
+
+            ctx.fillStyle = "rgb(200,0,0)";
+            ctx.fillRect(10,10,50,50);
+
+            ctx.fillStyle = "rgb(0,0,200,0.5)";
+            ctx.fillRect(30,30,50,50);
+        }
+    }
+    draw("canvas_1")
+    draw("canvas_2")
+
+    function drawFillClearStroke(canvasId){
+        const canvas = document.getElementById(canvasId)
+
+        if(canvas.getContext){
+            const ctx = canvas.getContext("2d")
+
+            ctx.fillRect(25, 25, 100, 100)
+            ctx.clearRect(45, 45, 60, 60)
+            ctx.strokeRect()
+        }
+    }
+
+</script>
