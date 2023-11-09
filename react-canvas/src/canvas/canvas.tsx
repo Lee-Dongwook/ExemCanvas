@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react'
 
-const Canvas = props => {
+const Canvas = (props: { [x: string]: any; draw: any }) => {
   
   const { draw, ...rest } = props
   const canvasRef = useRef(null)
