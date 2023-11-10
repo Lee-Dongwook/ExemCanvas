@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
-import { drawCircle } from './canvas/drawCircle';
+import { drawDoubleCircle } from './canvas/drawCircle';
 import Canvas from './canvas/canvas';
 
 function App() {
   return (
-    <div>
-      <Canvas draw={drawCircle} />
-      <Canvas draw={drawCircle} />
+    <div id ="stage">
+      <Canvas draw={drawDoubleCircle} id="outer-layer" />
     </div>
   );
 }
