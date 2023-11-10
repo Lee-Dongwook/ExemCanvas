@@ -55,17 +55,19 @@
             canvas.width = width
             canvas.height = height
 
-            ctx.save();
-
+            
             const scale = Math.min(width / 192, height / 192)
             ctx.scale(scale, scale)
 
+            ctx.save();
             ctx.beginPath();
             ctx.ellipse(96, 96, 96, 96, 0, 0, 2 * Math.PI);
             ctx.fillStyle = createGradient(ctx, "#Gradient-0");
             ctx.fill();
             ctx.closePath();
+            ctx.restore();
 
+            ctx.save();
             ctx.beginPath();
             ctx.ellipse(96, 96, 96, 96, 0, 0, 2 * Math.PI);
             ctx.fillStyle = createGradient(ctx, "#Gradient-1");
@@ -73,19 +75,25 @@
             ctx.fill();
             ctx.globalAlpha = 1;
             ctx.closePath();
+            ctx.restore();
 
+            ctx.save();
             ctx.beginPath();    
             ctx.ellipse(96, 96, 76, 76, 0, 0, 2 * Math.PI);
             ctx.fillStyle = "#0f2439";
             ctx.fill();
             ctx.closePath();
+            ctx.restore();
 
+            ctx.save()
             ctx.beginPath();
             ctx.ellipse(96, 96, 96, 96, 0, 0, 2 * Math.PI);
             ctx.fillStyle = createGradient(ctx, "#Gradient-0");
             ctx.fill();
             ctx.closePath();
+            ctx.restore()
 
+            ctx.save()
             ctx.beginPath();
             ctx.ellipse(96, 96, 96, 96, 0, 0, 2 * Math.PI);
             ctx.fillStyle = createGradient(ctx, "#Gradient-1");
@@ -93,28 +101,33 @@
             ctx.fill();
             ctx.globalAlpha = 1;
             ctx.closePath();
-
+            ctx.restore()
             
+            ctx.save()
             ctx.beginPath();    
             ctx.ellipse(96, 96, 76, 76, 0, 0, 2 * Math.PI);
             ctx.fillStyle = "#0f2439";
             ctx.fill();
             ctx.closePath();
+            ctx.restore()
 
-            
+            ctx.save()
             ctx.beginPath();    
             ctx.ellipse(96, 96, 79, 79, 0, 0, 2 * Math.PI);
             ctx.fillStyle = "#22263a";
             ctx.fill();
             ctx.closePath();
+            ctx.restore()
 
-
+            ctx.save()
             ctx.beginPath();
             ctx.ellipse(96, 96, 79, 79, 0, 0, 2 * Math.PI);
             ctx.fillStyle = createGradient(ctx, "#Gradient-2");
             ctx.fill();
             ctx.closePath();
+            ctx.restore()
 
+            ctx.save()
             ctx.beginPath();
             ctx.ellipse(96, 96, 96, 96, 0, 0, 2 * Math.PI);
             ctx.fillStyle = createGradient(ctx, "#Gradient-3");
@@ -122,37 +135,46 @@
             ctx.fill();
             ctx.globalAlpha = 1;
             ctx.closePath();
+            ctx.restore()
 
+            ctx.save()
             ctx.beginPath();
             ctx.ellipse(96, 96, 76, 76, 0, 0, 2 * Math.PI);
             ctx.fillStyle = "#0f2439"
             ctx.fill();
             ctx.closePath();
+            ctx.restore()
 
+            ctx.save()
             ctx.beginPath();
             ctx.ellipse(96, 96, 79, 79, 0, 0, 2 * Math.PI);
             ctx.fillStyle = "#22263a"
             ctx.fill();
             ctx.closePath();
+            ctx.restore()
 
+            ctx.save()
             ctx.beginPath();
             ctx.ellipse(96, 96, 79, 79, 0, 0, 2 * Math.PI);
             ctx.fillStyle = createGradient(ctx, "#Gradient-2");
             ctx.fill();
             ctx.closePath();
+            ctx.restore()
 
+            ctx.save()
             ctx.fillStyle = "#ffffff"
             ctx.font = "40px Roboto, Arial, sans-serif"
             ctx.textAlign = "start"
             ctx.textBaseline = "middle"
             ctx.fillText(apiData, 65, 96)
+            ctx.restore()
 
+            ctx.save()
             ctx.fillStyle = "#ffffff"
             ctx.font = "20px Roboto, Arial, sans-serif"
             ctx.textAlign = "start"
             ctx.textBaseline = "middle"
             ctx.fillText(percentData, 115, 100)
-
             ctx.restore();
         }
 
