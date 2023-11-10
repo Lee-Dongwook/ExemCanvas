@@ -178,6 +178,28 @@
             ctx.fillText(percentData, 115, 100);
             ctx.restore();
 
+
+            function animationDraw() {
+              const element = new Path2D('M33.3-9.2c56 17.1 111.2-6.2 135-12.9l32.7 90.8c-18.2 6.6-123.8 46.5-157.8 37.7c-42.5-10.9-113.6-147.3-9.9-115.6Z')
+              
+              ctx.translate(-89.9, 107.8)
+
+              ctx.save()
+              ctx.transform(Math.cos(11 * Math.PI / 180), Math.sin(11 * Math.PI / 180), -Math.sin(11 * Math.PI / 180), Math.cos(11 * Math.PI / 180), 0, 0);
+              ctx.transform(1, 0, 0, 1, -92.1, -24.4);
+              ctx.beginPath()
+              ctx.moveTo(33.3, -9.2)
+              ctx.bezierCurveTo(56, 17.1, 111.2, -6.2, 135, -12.9)
+              ctx.lineTo(132.7, 90.8)
+              ctx.bezierCurveTo(-18.2, 6.6, -123.8, 46.5, -157.8, 37.7)
+              ctx.bezierCurveTo(-42.5, -10.9, -113.6, -147.3, -9.9, -115.6) 
+              ctx.fillStyle = createGradient(ctx, "#Gradient-4")
+              ctx.fill(element)
+              ctx.closePath()
+              ctx.restore()
+            }
+
+            animationDraw()
         }
 
         fetchApi().then((res) => {
