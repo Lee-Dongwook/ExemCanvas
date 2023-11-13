@@ -48,33 +48,178 @@
             ]
         }
 
+        const dashboardGradientCoordinateSet = [
+            {
+                startX: 0,
+                startY: -96,
+                endX: 0,
+                endY: 96,
+            },
+            {
+                startX: 0,
+                startY: -96,
+                endX: 96,
+                endY: 59.5,
+            },
+            {
+                startX: 0,
+                startY: -79,
+                endX: 0,
+                endY: 79,
+            },
+            {
+                startX: 0,
+                startY: -96,
+                endX: 96,
+                endY: 59.5,
+            },
+            {
+                startX: 80.7,
+                startY: -62.4,
+                endX: 97.2,
+                endY: 85.2,
+            },
+            {
+                startX: 47.5,
+                startY: -6,
+                endX: 196.6,
+                endY: 158.4,
+            },
+            {
+                startX: 108.7,
+                startY: 32.9,
+                endX: 108.7,
+                endY: 276,
+            },
+            {
+                startX: 12.8,
+                startY: 25.9,
+                endX: 89.5,
+                endY: 119.4,
+            },
+        ]
+
+        const dashboardEllipseSet = [
+            {
+                x: 96, 
+                y: 96, 
+                radiusX: 96, 
+                radiusY: 96
+            },
+            {
+                x: 96, 
+                y: 96, 
+                radiusX: 96, 
+                radiusY: 96
+            },
+            {
+                x: 96, 
+                y: 96, 
+                radiusX: 76, 
+                radiusY: 76
+            },
+            {
+                x: 96, 
+                y: 96, 
+                radiusX: 96, 
+                radiusY: 96
+            },
+            {
+                x: 96, 
+                y: 96, 
+                radiusX: 96, 
+                radiusY: 96
+            },
+            {
+                x: 96, 
+                y: 96, 
+                radiusX: 76, 
+                radiusY: 76
+            },
+            {
+                x: 96, 
+                y: 96, 
+                radiusX: 79, 
+                radiusY: 79
+            },
+            {
+                x: 96, 
+                y: 96, 
+                radiusX: 79, 
+                radiusY: 79
+            },
+            {
+                x: 96, 
+                y: 96, 
+                radiusX: 96, 
+                radiusY: 96
+            },
+            {
+                x: 96, 
+                y: 96, 
+                radiusX: 76, 
+                radiusY: 76
+            },
+            {
+                x: 96, 
+                y: 96, 
+                radiusX: 79, 
+                radiusY: 79
+            },
+            {
+                x: 96, 
+                y: 96, 
+                radiusX: 79, 
+                radiusY: 79
+            },
+        ]
+
         function applyOpacity(color, opacity) {
             const rgb = color.match(/\d+/g);
             return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${opacity})`;
         }
 
-        function createGradient(dashboardCanvas, dashboardCanvasContext, gradientId, coordinate) {
+        function createGradient(dashboardCanvasContext, gradientId, coordinate) {
             const linearGradient = dashboardCanvasContext.createLinearGradient(
                 coordinate.startX, coordinate.startY, coordinate.endX, coordinate.endY
             )
             
-            const gradiantConfigSet = gradianSet[gradientId];
+            const gradiantConfigSet = dashboardGradientSet[gradientId];
 
             if (gradiantConfigSet) {
                 gradiantConfigSet.forEach((gradiantConfig) => {
                     const { offset, color, opacity } = gradiantConfig;
 
                     if (opacity) {
-                        gradient.addColorStop(offset, applyOpacity(color, opacity));
+                        linearGradient.addColorStop(offset, applyOpacity(color, opacity));
                     } else {
-                        gradient.addColorStop(offset, color);
+                        linearGradient.addColorStop(offset, color);
                     }
                 });
             }
 
-            return gradient;
+            return linearGradient;
         }
 
+        function drawEllipse(dashboardCanvasContext, gradientId, ellipse, coordinate) {
+            dashboardCanvasContext.save()
+            dashboardCanvasContext.beginPath()
+            dashboardCanvasContext.ellipse(ellipse.x, ellipse.y, ellipse.radiusX, ellipse.radiusY, 0, 0, 2 * Math.PI)
+            if(gradientId){
+                dashboardCanvasContext.fillStyle = createGradient(dashboardCanvasContext, gradientId, coordinate)
+            }
+            dashboardCanvasContext.fill()
+            dashboardCanvasContext.closePath()
+            dashboardCanvasContext.restore()
+        }
+
+        function draw() { 
+            drawEllipse(dashboardCanvasContext, "#Gradient-0", dashboardEllipseSet[0], dashboardGradientCoordinateSet[0])
+            drawEllipse(dashboardCanvasContext, "#Gradient-1", dashboardEllipseSet[1], dashboardGradientCoordinateSet[1])
+            drawEllipse(dashboardCanvasContext, "#Gradient-0", dashboardEllipseSet[3], dashboardGradientCoordinateSet[3])
+        }
+
+        draw()
 
 </script>
 </body>
