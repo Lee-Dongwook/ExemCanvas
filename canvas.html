@@ -6,9 +6,12 @@
     <title>SVG to Canvas</title>
 </head>
 <body>
-    <canvas id="myCanvas"></canvas>
-
-    <script>
+    <div>
+        <canvas id="myCanvas"></canvas>
+        <input type="hidden" id="h" value="0"></input>
+        <canvas id="animation"></canvas>
+    </div>
+<script>
         const canvas = document.getElementById("myCanvas");
         const ctx = canvas.getContext("2d");
         const minWidth = 300
@@ -177,74 +180,55 @@
             ctx.textBaseline = "middle";
             ctx.fillText(percentData, 115, 100);
             ctx.restore();
+        }
 
+        function circ() {
+            var canvas = document.getElementById('animation')
+            var ctx = canvas.getContext('2d')
+            var i = parseFloat(document.getElementById('h').value) + 10;
 
-            // var offsetDistance = 0;
-            // var animationStartTime = null;
-            // const path = new Path2D('M33.3-9.2c56 17.1 111.2-6.2 135-12.9l32.7 90.8c-18.2 6.6-123.8 46.5-157.8 37.7c-42.5-10.9-113.6-147.3-9.9-115.6');
+            ctx.beginPath();
+            ctx.moveTo(200, 0); 
+            ctx.lineTo(200 + 40 * Math.sin(i * Math.PI / 180), 135);
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = "grey";
+            ctx.stroke();
 
-            // function animate(currentTime) {
-            //     if (!animationStartTime) {
-            //      animationStartTime = currentTime;
-            //     }
+            ctx.beginPath();
+            ctx.arc(200 + 40 * Math.sin(i * Math.PI / 180), 150, 20, 0, 2 * Math.PI, false);
+            if (i == 360 || i > 360) { i = 0; }
 
-            //     // 경과 시간 계산
-            //     var elapsedTime = currentTime - animationStartTime;
+            document.getElementById('h').value = i;
+            
+            var x = 200;
+            var y = 150;
+            var grd = ctx.createRadialGradient(x,y,2,x,y,18)
 
-            //     // offset-distance 애니메이션 업데이트
-            //     offsetDistance = (elapsedTime % 2000) / 20;
+            grd.addColorStop(0, '#8ED6FF');
 
-            //     // Canvas 초기화
-            //     ctx.clearRect(0, 0, canvas.width, canvas.height);
+            grd.addColorStop(1, '#0000ff');
 
-            //     // 변환 및 그리기
-            //     ctx.save();
-            //     ctx.translate(-89.9, 107.8);
-            //     ctx.translate(-92.1, -24.4);
-            //     ctx.rotate(11 * Math.PI / 180);
+            ctx.fillStyle = grd;
 
-            //     // cubic-bezier 기반 애니메이션 적용
-            //     var animatedPath = new Path2D();
-            //     animatedPath.addPath(path, { transform: { a: 1, b: 0, c: 0, d: 1, e: offsetDistance, f: 0 } });
+            ctx.fill();
+        }
 
-            //     ctx.fillStyle = createGradient(ctx, "#Gradient-4");
-            //     ctx.fill(animatedPath);
-            //     ctx.restore();
-
-            //     // 다음 프레임 요청
-            //     requestAnimationFrame(animate);
-            // }
-
-            //     // 애니메이션 시작
-            //     animate();
-
-            // function animationDraw() {
-            //   const element = new Path2D('M33.3-9.2c56 17.1 111.2-6.2 135-12.9l32.7 90.8c-18.2 6.6-123.8 46.5-157.8 37.7c-42.5-10.9-113.6-147.3-9.9-115.6Z')
-              
-            //   ctx.translate(-89.9, 107.8)
-
-            //   ctx.save()
-
-            //   ctx.translate(-92.1, -24.4)
-            //   ctx.rotate(11 * Math.PI / 180)
-
-            //   ctx.beginPath()
-            //   ctx.fillStyle = createGradient(ctx, "#Gradient-4")
-            //   ctx.fill(element)
-            //   ctx.closePath()
-            //   ctx.restore()
-            // }
-
-            // animationDraw()
+        function animateDraw() {
+            circ()
+            setTimeout(function() {
+                requestAnimationFrame(animateDraw)
+            }, 1600)
         }
 
         fetchApi().then((res) => {
             const apiData = res.userId.toString() + '5'
             const percentData = '%'
             draw(apiData, percentData)
+            animateDraw()
             
             window.addEventListener('resize', () => {
                 draw(apiData, percentData)
+                animateDraw()
             })
         })
     </script>

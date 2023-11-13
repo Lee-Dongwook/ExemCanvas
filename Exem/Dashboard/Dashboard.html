@@ -201,7 +201,17 @@
             return linearGradient;
         }
 
-        function drawEllipse(dashboardCanvasContext, gradientId, ellipse, coordinate) {
+        function drawEllipse(dashboardCanvasContext, color, ellipse) {
+            dashboardCanvasContext.save()
+            dashboardCanvasContext.beginPath()
+            dashboardCanvasContext.ellipse(ellipse.x, ellipse.y, ellipse.radiusX, ellipse.radiusY, 0, 0, 2 * Math.PI)
+            dashboardCanvasContext.fillStyle = color
+            dashboardCanvasContext.fill()
+            dashboardCanvasContext.closePath()
+            dashboardCanvasContext.restore()
+        }
+
+        function drawGradientEllipse(dashboardCanvasContext, gradientId, ellipse, coordinate) {
             dashboardCanvasContext.save()
             dashboardCanvasContext.beginPath()
             dashboardCanvasContext.ellipse(ellipse.x, ellipse.y, ellipse.radiusX, ellipse.radiusY, 0, 0, 2 * Math.PI)
@@ -214,9 +224,19 @@
         }
 
         function draw() { 
-            drawEllipse(dashboardCanvasContext, "#Gradient-0", dashboardEllipseSet[0], dashboardGradientCoordinateSet[0])
-            drawEllipse(dashboardCanvasContext, "#Gradient-1", dashboardEllipseSet[1], dashboardGradientCoordinateSet[1])
-            drawEllipse(dashboardCanvasContext, "#Gradient-0", dashboardEllipseSet[3], dashboardGradientCoordinateSet[3])
+            drawGradientEllipse(dashboardCanvasContext, "#Gradient-0", dashboardEllipseSet[0], dashboardGradientCoordinateSet[0])
+            drawGradientEllipse(dashboardCanvasContext, "#Gradient-1", dashboardEllipseSet[1], dashboardGradientCoordinateSet[1])
+            drawEllipse(dashboardCanvasContext,"#0f2439",dashboardEllipseSet[2])
+            drawGradientEllipse(dashboardCanvasContext, "#Gradient-0", dashboardEllipseSet[3], dashboardGradientCoordinateSet[2])
+            drawGradientEllipse(dashboardCanvasContext, "#Gradient-1", dashboardEllipseSet[4], dashboardGradientCoordinateSet[3])
+            drawEllipse(dashboardCanvasContext,"#0f2439",dashboardEllipseSet[5])
+            drawEllipse(dashboardCanvasContext,"#222263a",dashboardEllipseSet[6])
+            drawGradientEllipse(dashboardCanvasContext, "#Gradient-2", dashboardEllipseSet[7], dashboardGradientCoordinateSet[4])
+            drawGradientEllipse(dashboardCanvasContext, "#Gradient-3", dashboardEllipseSet[8], dashboardGradientCoordinateSet[5])
+            drawEllipse(dashboardCanvasContext,"#0f2439",dashboardEllipseSet[9])
+            drawEllipse(dashboardCanvasContext,"#222263a",dashboardEllipseSet[10])
+            drawGradientEllipse(dashboardCanvasContext, "#Gradient-2", dashboardEllipseSet[9], dashboardGradientCoordinateSet[6])
+
         }
 
         draw()
