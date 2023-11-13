@@ -179,27 +179,63 @@
             ctx.restore();
 
 
-            function animationDraw() {
-              const element = new Path2D('M33.3-9.2c56 17.1 111.2-6.2 135-12.9l32.7 90.8c-18.2 6.6-123.8 46.5-157.8 37.7c-42.5-10.9-113.6-147.3-9.9-115.6Z')
+            // var offsetDistance = 0;
+            // var animationStartTime = null;
+            // const path = new Path2D('M33.3-9.2c56 17.1 111.2-6.2 135-12.9l32.7 90.8c-18.2 6.6-123.8 46.5-157.8 37.7c-42.5-10.9-113.6-147.3-9.9-115.6');
+
+            // function animate(currentTime) {
+            //     if (!animationStartTime) {
+            //      animationStartTime = currentTime;
+            //     }
+
+            //     // 경과 시간 계산
+            //     var elapsedTime = currentTime - animationStartTime;
+
+            //     // offset-distance 애니메이션 업데이트
+            //     offsetDistance = (elapsedTime % 2000) / 20;
+
+            //     // Canvas 초기화
+            //     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            //     // 변환 및 그리기
+            //     ctx.save();
+            //     ctx.translate(-89.9, 107.8);
+            //     ctx.translate(-92.1, -24.4);
+            //     ctx.rotate(11 * Math.PI / 180);
+
+            //     // cubic-bezier 기반 애니메이션 적용
+            //     var animatedPath = new Path2D();
+            //     animatedPath.addPath(path, { transform: { a: 1, b: 0, c: 0, d: 1, e: offsetDistance, f: 0 } });
+
+            //     ctx.fillStyle = createGradient(ctx, "#Gradient-4");
+            //     ctx.fill(animatedPath);
+            //     ctx.restore();
+
+            //     // 다음 프레임 요청
+            //     requestAnimationFrame(animate);
+            // }
+
+            //     // 애니메이션 시작
+            //     animate();
+
+            // function animationDraw() {
+            //   const element = new Path2D('M33.3-9.2c56 17.1 111.2-6.2 135-12.9l32.7 90.8c-18.2 6.6-123.8 46.5-157.8 37.7c-42.5-10.9-113.6-147.3-9.9-115.6Z')
               
-              ctx.translate(-89.9, 107.8)
+            //   ctx.translate(-89.9, 107.8)
 
-              ctx.save()
-              ctx.transform(Math.cos(11 * Math.PI / 180), Math.sin(11 * Math.PI / 180), -Math.sin(11 * Math.PI / 180), Math.cos(11 * Math.PI / 180), 0, 0);
-              ctx.transform(1, 0, 0, 1, -92.1, -24.4);
-              ctx.beginPath()
-              ctx.moveTo(33.3, -9.2)
-              ctx.bezierCurveTo(56, 17.1, 111.2, -6.2, 135, -12.9)
-              ctx.lineTo(132.7, 90.8)
-              ctx.bezierCurveTo(-18.2, 6.6, -123.8, 46.5, -157.8, 37.7)
-              ctx.bezierCurveTo(-42.5, -10.9, -113.6, -147.3, -9.9, -115.6) 
-              ctx.fillStyle = createGradient(ctx, "#Gradient-4")
-              ctx.fill(element)
-              ctx.closePath()
-              ctx.restore()
-            }
+            //   ctx.save()
 
-            animationDraw()
+            //   ctx.translate(-92.1, -24.4)
+            //   ctx.rotate(11 * Math.PI / 180)
+
+            //   ctx.beginPath()
+            //   ctx.fillStyle = createGradient(ctx, "#Gradient-4")
+            //   ctx.fill(element)
+            //   ctx.closePath()
+            //   ctx.restore()
+            // }
+
+            // animationDraw()
         }
 
         fetchApi().then((res) => {
