@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient</title>
+</head>
+<body>
+    <canvas id="gradient" width="400px" height="400px"></canvas>
+<script>
+    const gradientCanvas = document.getElementById('gradient');
+    const gradientCanvasContext = gradientCanvas.getContext('2d');
+    const devicePixelRatio = window.devicePixelRatio;
+    const sizes = [];
+    const gradients = [];
+    const width = 500;
+    const height = 500;
+    const radiusStart = 30;
+    const radiusInc = 30;
+    const count = 4;
+    const colors = [
+       ['#196df3', '#25273d'],
+       ['#594ed7', '#7b61ff']  
+    ]
+
+
+    const buildSizes = () => {
+        for(let i = 0; i < count; i++) {
+            let rad = radiusStart + radiusInc * (count - i - 1);
+            sizes.push(rad);
+        }
+    };
+
+    const buildGradients = () => {
+        for(let i = 0; i < count; i ++) {
+            let rad = sizes[i];
+            let gradient;
+
+            if(i < count - 1) {
+                gradient = gradientCanvasContext.createLinearGradient(
+                  width / 2 - rad,
+                  height / 2 - rad,
+                  width / 2 + rad,
+                  height / 2 + rad
+                );
+            } else {
+                gradient = gradientCanvasContext.createLinearGradient(
+                    width / 2 + rad,
+                    height / 2 - rad,
+                    width / 2 - rad,
+                    height / 2 + rad
+                )
+            }
+
+            gradient.addColorStop(0, colors[i][0]);
+            gradient.addColorStop(1, colors[i][1]);
+            gradient.push(gradient);
+        }
+    }
+
+    const draw = () => {
+        
+    }
+
+
+
+
+
+
+</script>
+</body>
+</html>
