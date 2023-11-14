@@ -6,15 +6,18 @@
     <title>Animation</title>
 </head>
 <body>
-    <canvas id="c" width="300px" height="300px"></canvas>
+    <canvas id="dashboardCanvas" width="300px" height="300px"></canvas>
 <script>
-var c = document.getElementById('c'),
-    ctx = c.getContext('2d'),
-    cw = c.width 
-    ch = c.height
-    points = [],
-    tick = 0,
-    opt = {
+    const dashboardCanvas = document.getElementById('dashboardCanvas');
+    const dashboardCanvasContext = dashboardCanvas.getContext('2d');
+    
+    const dashboardCanvasWidth = dashboardCanvas.width; 
+    const dashboardCanvasHeight = dashboardCanvas.height;
+    
+    const points = [];
+    let time = 0;
+
+    const dashboardAnimationConfig = {
       count: 5,
       range: {
         x: 20,
@@ -28,123 +31,152 @@ var c = document.getElementById('c'),
       strokeColor: '#444',
       level: .35,
       curved: true
-    },
-    rand = function(min, max){
-        return Math.floor( (Math.random() * (max - min + 1) ) + min);
-    },
-    ease = function (t, b, c, d) {
-	    if ((t/=d/2) < 1) return c/2*t*t + b;
-	    return -c/2 * ((--t)*(t-2) - 1) + b;
     };
 
-ctx.lineJoin = 'round';
-ctx.lineWidth = opt.thickness;
-ctx.strokeStyle = opt.strokeColor;
+    dashboardCanvasContext.lineJoin = 'round';
+    dashboardCanvasContext.lineWidth = dashboardAnimationConfig.thickness;
+    dashboardCanvasContext.strokeStyle = dashboardAnimationConfig.strokeColor;
 
-var Point = function(config){
-  this.anchorX = config.x;
-  this.anchorY = config.y;
-  this.x = config.x;
-  this.y = config.y;
-  this.setTarget();  
-};
+    const rand = (min, max) => {
+        return Math.floor( (Math.random() * (max - min + 1) ) + min);
+    };
 
-Point.prototype.setTarget = function(){
-  this.initialX = this.x;
-  this.initialY = this.y;
-  this.targetX = this.anchorX + rand(0, opt.range.x * 2) - opt.range.x;
-  this.targetY = this.anchorY + rand(0, opt.range.y * 2) - opt.range.y;
-  this.tick = 0;
-  this.duration = rand(opt.duration.min, opt.duration.max);
-}
-  
-Point.prototype.update = function(){
-  var dx = this.targetX - this.x;
-  var dy = this.targetY - this.y;
-  var dist = Math.sqrt(dx * dx + dy * dy);
-  
-  if(Math.abs(dist) <= 0){
-    this.setTarget();
-  } else {       
-    var t = this.tick;
-    var b = this.initialY;
-    var c = this.targetY - this.initialY;
-    var d = this.duration;
-    this.y = ease(t, b, c, d);
-    
-    b = this.initialX;
-    c = this.targetX - this.initialX;
-    d = this.duration;
-    this.x = ease(t, b, c, d);
-  
-    this.tick++;
-  }
-};
-    
-Point.prototype.render = function(){
-  ctx.beginPath();
-  ctx.arc(this.x, this.y, 3, 0, Math.PI * 2, false);
-  ctx.fillStyle = '#000';
-  ctx.fill();
-};
+    //이징함수 => 시간 흐름에 따른 매개변수의 변화율 측정 / Wave의 강도를 조절하는 부분
+    const ease = (time, coordinateConfig) => {
+	    if (( time/= coordinateConfig.duration / 2) < 1) return coordinateConfig.change / 2 * time * time + coordinateConfig.begin;
+	    return -coordinateConfig.change / 2 * (( --time ) * ( time - 2 ) - 1) + coordinateConfig.begin;
+    };
 
-var updatePoints = function(){
-  var i = points.length;
-  while(i--){
-    points[i].update();
-  }
-};
+    class Point {
+      
+      constructor(config) {
+        this.anchorX = config.x;
+        this.anchorY = config.y;
+        this.x = config.x;
+        this.y = config.y;
+        this.setTarget();
+      };
 
-var renderPoints = function(){
-  var i = points.length;
-  while(i--){
-    points[i].render();
-  }
-};
+      setTarget() {
+        this.initialX = this.x;
+        this.initialY = this.y;
+        this.targetX = this.anchorX + rand(0, dashboardAnimationConfig.range.x * 2) - dashboardAnimationConfig.range.x;
+        this.targetY = this.anchorY + rand(0, dashboardAnimationConfig.range.y * 2) - dashboardAnimationConfig.range.y;
+        this.time = 0;
+        this.duration = rand(dashboardAnimationConfig.duration.min, dashboardAnimationConfig.duration.max);
+      }
 
-var renderShape = function(){
-  ctx.beginPath();
-  var pointCount = points.length;
-  ctx.moveTo(points[0].x, points[0].y);	  
-  var i;
-  for (i = 0; i < pointCount - 1; i++) {
-    var c = (points[i].x + points[i + 1].x) / 2;
-    var d = (points[i].y + points[i + 1].y) / 2;
-    ctx.quadraticCurveTo(points[i].x, points[i].y, c, d);
-  }
-  ctx.lineTo(-opt.range.x - opt.thickness, ch + opt.thickness);
-  ctx.lineTo(cw + opt.range.x + opt.thickness, ch + opt.thickness);
-  ctx.closePath();   
-  ctx.fillStyle = '#000';
-  ctx.fill();  
-  ctx.stroke();
-};
+      update() {
+        let dx = this.targetX - this.x;
+        let dy = this.targetY - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
 
-var clear = function(){
-  ctx.clearRect(0, 0, cw, ch);
-};
+        if(Math.abs(distance) <= 0) {
+          this.setTarget();
+        } else {
+          let time = this.time;
 
-var loop = function(){
-  window.requestAnimFrame(loop, c);
-  tick++;
-  clear();
-  updatePoints();
-  renderShape();
-  //renderPoints();
-};
+          let yCoordinateConfig = {
+            begin: this.initialY,
+            change: this.targetY - this.initialY,
+            duration: this.duration
+          };
 
-var i = opt.count + 2;
-var spacing = (cw + (opt.range.x * 2)) / (opt.count-1);
+          this.y = ease(time, yCoordinateConfig);
+
+          let xCoordinateConfig = {
+            begin: this.initialX,
+            change: this.targetX - this.initialX,
+            duration: this.duration
+          };
+
+          this.x = ease(time, xCoordinateConfig);
+
+          this.time++;
+        }
+      }
+
+      render() {
+          dashboardCanvasContext.beginPath();
+          dashboardCanvasContext.arc(this.x, this.y, 3, 0, Math.PI * 2, false);
+          dashboardCanvasContext.fillStyle = '#000';
+          dashboardCanvasContext.fill();
+      }
+    }
+
+    const updatePoints = () => {
+      points.forEach((point) => {
+          point.update();
+      });
+    };
+
+    const renderPoints = () => {
+      points.forEach((point) => {
+          point.render();
+      })
+    };
+
+    const renderShape = () => {
+
+      dashboardCanvasContext.beginPath();
+
+      var pointCount = points.length;	  
+      var i;
+      for (i = 0; i < pointCount - 1; i++) {
+        var c = (points[i].x + points[i + 1].x) / 2;
+        var d = (points[i].y + points[i + 1].y) / 2;
+        dashboardCanvasContext.quadraticCurveTo(points[i].x, points[i].y, c, d);
+      }
+      dashboardCanvasContext.lineTo(
+        -dashboardAnimationConfig.range.x - dashboardAnimationConfig.thickness, 
+        dashboardCanvasHeight + dashboardAnimationConfig.thickness
+      );
+
+      dashboardCanvasContext.lineTo(
+        dashboardCanvasWidth + dashboardAnimationConfig.range.x + dashboardAnimationConfig.thickness, 
+        dashboardCanvasHeight + dashboardAnimationConfig.thickness
+      );
+
+      // points.forEach((point, index) => {
+
+      //   let startX = points[index].x;
+      //   let startY = points[index].y;
+      //   let endX = (startX + points[index + 1].x) / 2;
+      //   let endY = (startY + points[index + 1].y) / 2;
+
+      //   dashboardCanvasContext.quadraticCurveTo(
+      //     startX, startY, endX, endY
+      //   )
+      // })
+
+      dashboardCanvasContext.closePath();
+      dashboardCanvasContext.fillStyle = '#000';
+      dashboardCanvasContext.fill();
+      dashboardCanvasContext.stroke();
+
+    };
+
+    const clear = () => {
+      dashboardCanvasContext.clearRect(0, 0, dashboardCanvasWidth, dashboardCanvasHeight);
+    };
+
+    var loop = function(){
+        requestAnimationFrame(loop, dashboardCanvas);
+        time++;
+        clear();
+        updatePoints();
+        renderShape();
+        //renderPoints();
+    };
+
+var i = dashboardAnimationConfig.count + 2;
+var spacing = (dashboardCanvasWidth + (dashboardAnimationConfig.range.x * 2)) / (dashboardAnimationConfig.count - 1);
 while(i--){
   points.push(new Point({
-    x: (spacing * (i - 1)) - opt.range.x,
-    y: ch - (ch * opt.level)
+    x: (spacing * (i - 1)) - dashboardAnimationConfig.range.x,
+    y: dashboardCanvasHeight - (dashboardCanvasHeight * dashboardAnimationConfig.level)
   }));
 }
-
-window.requestAnimFrame=function(){return window.requestAnimationFrame||window.webkitRequestAnimationFrame||window.mozRequestAnimationFrame||window.oRequestAnimationFrame||window.msRequestAnimationFrame||function(a){window.setTimeout(a,1E3/60)}}();
-
-console.log(points);
 
 loop();
 </script>
