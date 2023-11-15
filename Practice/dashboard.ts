@@ -1,4 +1,13 @@
 type DashboardGradientColor = string[]
+type DashboardAnimationColor = string
+type DashboardAnimationRange = {
+    x: number,
+    y: number
+}
+type DashboardAnimationDuration = {
+    min: number,
+    max: number
+}
 
 interface DashboardCanvasConfig {
     dashboardCanvas: any
@@ -15,6 +24,18 @@ interface DashboardGradientConfig extends DashboardCanvasConfig {
     gradients: any[]
     colors: DashboardGradientColor[]   
 }
+
+interface DashboardAnimationConfig extends DashboardCanvasConfig {
+    dashboardCanvasContext: any
+    count: number
+    range: DashboardAnimationRange
+    duration: DashboardAnimationDuration
+    thickness: number
+    strokeColor: DashboardAnimationColor
+    level: number
+    curved: boolean
+}
+
 
 const dashboardCanvasConfig: DashboardCanvasConfig = {
     dashboardCanvas: document.getElementById('gradient') as HTMLCanvasElement,

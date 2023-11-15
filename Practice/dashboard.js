@@ -18,17 +18,18 @@ var dashboardGradientConfig = {
         ['#594ed7', '#7b61ff']
     ],
 };
-var buildSizes = function (_a) {
-    var count = _a.count, radiusStart = _a.radiusStart, radiusInc = _a.radiusInc, sizes = _a.sizes;
+var buildSizes = function (config) {
+    var count = config.count, radiusStart = config.radiusStart, radiusInc = config.radiusInc, sizes = config.sizes;
     for (var i = 0; i < count; i++) {
         var rad = radiusStart + radiusInc * (count - i - 1);
         sizes.push(rad);
     }
     return sizes;
 };
-var buildGradients = function (dashboardCanvasConfig, _a) {
-    var dashboardCanvasContext = _a.dashboardCanvasContext, dashboardCanvasWidth = _a.dashboardCanvasWidth, dashboardCanvasHeight = _a.dashboardCanvasHeight, count = _a.count, colors = _a.colors, gradients = _a.gradients;
-    var sizes = buildSizes(dashboardCanvasConfig);
+var buildGradients = function (config) {
+    var sizes = buildSizes(config);
+    config.sizes = sizes;
+    var count = config.count, dashboardCanvasContext = config.dashboardCanvasContext, dashboardCanvasWidth = config.dashboardCanvasWidth, dashboardCanvasHeight = config.dashboardCanvasHeight, colors = config.colors, gradients = config.gradients;
     for (var i = 0; i < count; i++) {
         var rad = sizes[i];
         var gradient = void 0;
@@ -44,11 +45,12 @@ var buildGradients = function (dashboardCanvasConfig, _a) {
     }
     return gradients;
 };
-var drawGradients = function (_a) {
-    var dashboardCanvasContext = _a.dashboardCanvasContext, dashboardCanvasWidth = _a.dashboardCanvasWidth, dashboardCanvasHeight = _a.dashboardCanvasHeight, count = _a.count, radiusStart = _a.radiusStart, radiusInc = _a.radiusInc;
+var drawGradients = function (config) {
+    var gradients = buildGradients(config);
+    config.gradients = gradients;
+    var dashboardCanvasContext = config.dashboardCanvasContext, dashboardCanvasWidth = config.dashboardCanvasWidth, dashboardCanvasHeight = config.dashboardCanvasHeight, count = config.count, radiusStart = config.radiusStart, radiusInc = config.radiusInc;
     dashboardCanvasContext.fillStyle = '#fff';
     dashboardCanvasContext.fillRect(0, 0, dashboardCanvasWidth, dashboardCanvasHeight);
-    var gradients = buildGradients();
     for (var i = 0; i < count; i++) {
         var rad = radiusStart + radiusInc * (count - i - 1);
         dashboardCanvasContext.beginPath();
