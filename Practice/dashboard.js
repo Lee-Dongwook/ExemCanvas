@@ -1,23 +1,19 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 /*
     Gradient
 */
-var buildSizes = function (config) {
-    var count = config.count, radiusStart = config.radiusStart, radiusInc = config.radiusInc, sizes = config.sizes;
-    for (var i = 0; i < count; i++) {
-        var rad = radiusStart + radiusInc * (count - i - 1);
+const buildSizes = (config) => {
+    const { count, radiusStart, radiusInc, sizes } = config;
+    for (let i = 0; i < count; i++) {
+        let rad = radiusStart + radiusInc * (count - i - 1);
         sizes.push(rad);
     }
     return sizes;
 };
-var buildGradients = function (config) {
-    var sizes = buildSizes(config);
-    config.sizes = sizes;
-    var count = config.count, dashboardCanvasContext = config.dashboardCanvasContext, dashboardCanvasWidth = config.dashboardCanvasWidth, dashboardCanvasHeight = config.dashboardCanvasHeight, colors = config.colors, gradients = config.gradients;
-    for (var i = 0; i < count; i++) {
-        var rad = sizes[i];
-        var gradient = void 0;
+const buildGradients = (config) => {
+    const { dashboardCanvasContext, dashboardCanvasWidth, dashboardCanvasHeight, count, sizes, colors, gradients } = config;
+    for (let i = 0; i < count; i++) {
+        let rad = sizes[i];
+        let gradient;
         if (i < count - 1) {
             gradient = dashboardCanvasContext.createLinearGradient(dashboardCanvasWidth / 2 - rad, dashboardCanvasHeight / 2 - rad, dashboardCanvasWidth / 2 + rad, dashboardCanvasHeight / 2 + rad);
         }
@@ -30,26 +26,24 @@ var buildGradients = function (config) {
     }
     return gradients;
 };
-var drawGradients = function (config) {
-    var gradients = buildGradients(config);
-    config.gradients = gradients;
-    var dashboardCanvasContext = config.dashboardCanvasContext, dashboardCanvasWidth = config.dashboardCanvasWidth, dashboardCanvasHeight = config.dashboardCanvasHeight, count = config.count, radiusStart = config.radiusStart, radiusInc = config.radiusInc;
+const drawGradients = (config) => {
+    const { dashboardCanvasContext, dashboardCanvasWidth, dashboardCanvasHeight, count, gradients, radiusStart, radiusInc } = config;
     dashboardCanvasContext.fillStyle = '#fff';
     dashboardCanvasContext.fillRect(0, 0, dashboardCanvasWidth, dashboardCanvasHeight);
-    for (var i = 0; i < count; i++) {
-        var rad = radiusStart + radiusInc * (count - i - 1);
+    for (let i = 0; i < count; i++) {
+        let rad = radiusStart + radiusInc * (count - i - 1);
         dashboardCanvasContext.beginPath();
         dashboardCanvasContext.arc(dashboardCanvasWidth / 2, dashboardCanvasHeight / 2, rad, 0, Math.PI * 2);
         dashboardCanvasContext.fillStyle = gradients[i];
         dashboardCanvasContext.fill();
     }
 };
-var dashboardCanvasConfig = {
-    dashboardCanvas: document.getElementById('gradient'),
+const dashboardCanvasConfig = {
+    dashboardCanvas: document.getElementById('dashboardCanvas'),
     dashboardCanvasWidth: 500,
     dashboardCanvasHeight: 500
 };
-var dashboardGradientConfig = {
+const dashboardGradientConfig = {
     dashboardCanvas: dashboardCanvasConfig.dashboardCanvas,
     dashboardCanvasContext: dashboardCanvasConfig.dashboardCanvas.getContext('2d'),
     dashboardCanvasWidth: dashboardCanvasConfig.dashboardCanvasWidth,
@@ -67,7 +61,7 @@ var dashboardGradientConfig = {
 /*
     Animation
 */
-var dashboardAnimationConfig = {
+const dashboardAnimationConfig = {
     dashboardCanvas: dashboardCanvasConfig.dashboardCanvas,
     dashboardCanvasContext: dashboardCanvasConfig.dashboardCanvas.getContext('2d'),
     dashboardCanvasWidth: dashboardCanvasConfig.dashboardCanvasWidth,
@@ -86,47 +80,63 @@ var dashboardAnimationConfig = {
     level: .35,
     curved: true
 };
-var dashboardAnimationPoints = [];
-var DashboardAnimation = /** @class */ (function () {
-    function DashboardAnimation(config) {
+const dashboardAnimationPoints = [];
+class DashboardAnimation {
+    anchorX;
+    anchorY;
+    x;
+    y;
+    initialX;
+    initialY;
+    targetX;
+    targetY;
+    time;
+    duration;
+    constructor(config) {
         this.anchorX = config.x;
         this.anchorY = config.y;
         this.x = config.x;
         this.y = config.y;
+        this.initialX = 0;
+        this.initialY = 0;
+        this.targetX = 0;
+        this.targetY = 0;
+        this.time = 0;
+        this.duration = 0;
         this.setTarget();
     }
-    DashboardAnimation.prototype.rand = function (min, max) {
+    rand(min, max) {
         return Math.floor((Math.random() * (max - min + 1)) + min);
-    };
-    DashboardAnimation.prototype.ease = function (time, coordinateConfig) {
-        var begin = coordinateConfig.begin, change = coordinateConfig.change, duration = coordinateConfig.duration;
+    }
+    ease(time, coordinateConfig) {
+        const { begin, change, duration } = coordinateConfig;
         if ((time /= duration / 2) < 1)
             return change / 2 * time * time + begin;
         return -change / 2 * ((--time) * (time - 2) - 1) + begin;
-    };
-    DashboardAnimation.prototype.setTarget = function () {
+    }
+    setTarget() {
         this.initialX = this.x;
         this.initialY = this.y;
         this.targetX = this.anchorX + this.rand(0, dashboardAnimationConfig.range.x * 2);
         this.targetY = this.anchorY + this.rand(0, dashboardAnimationConfig.range.y * 2);
         this.time = 0;
         this.duration = this.rand(dashboardAnimationConfig.duration.min, dashboardAnimationConfig.duration.max);
-    };
-    DashboardAnimation.prototype.update = function () {
-        var dx = this.targetX - this.x;
-        var dy = this.targetY - this.y;
-        var distance = Math.sqrt(dx * dx + dy * dy);
+    }
+    update() {
+        let dx = this.targetX - this.x;
+        let dy = this.targetY - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
         if (Math.abs(distance) <= 0) {
             this.setTarget();
         }
         else {
-            var time = this.time;
-            var xCoordinateConfig = {
+            let time = this.time;
+            let xCoordinateConfig = {
                 begin: this.initialX,
                 change: this.targetX - this.initialX,
                 duration: this.duration
             };
-            var yCoordinateConfig = {
+            let yCoordinateConfig = {
                 begin: this.initialY,
                 change: this.targetY - this.initialY,
                 duration: this.duration
@@ -135,25 +145,35 @@ var DashboardAnimation = /** @class */ (function () {
             this.y = this.ease(time, yCoordinateConfig);
             this.time++;
         }
-    };
-    DashboardAnimation.prototype.render = function () {
+    }
+    render() {
         dashboardAnimationConfig.dashboardCanvasContext.beginPath();
         dashboardAnimationConfig.dashboardCanvasContext.arc(this.x, this.y, 3, 0, Math.PI * 2, false);
         dashboardAnimationConfig.dashboardCanvasContext.fillStyle = '#000';
         dashboardAnimationConfig.dashboardCanvasContext.fill();
-    };
-    return DashboardAnimation;
-}());
-var updatePoints = function () {
-    dashboardAnimationPoints.forEach(function (point) {
+    }
+}
+const updatePoints = () => {
+    dashboardAnimationPoints.forEach((point) => {
         point.update();
     });
 };
-var renderPoints = function () {
-    dashboardAnimationPoints.forEach(function (point) {
+const renderPoints = () => {
+    dashboardAnimationPoints.forEach((point) => {
         point.render();
     });
 };
-var renderShape = function () {
+const renderShape = () => {
     dashboardAnimationConfig.dashboardCanvasContext.beginPath();
 };
+/*
+    Complete
+*/
+const drawDashboard = () => {
+    const sizes = buildSizes(dashboardGradientConfig);
+    dashboardGradientConfig.sizes = sizes;
+    const gradients = buildGradients(dashboardGradientConfig);
+    dashboardGradientConfig.gradients = gradients;
+    drawGradients(dashboardGradientConfig);
+};
+export {};

@@ -23,10 +23,7 @@ const buildSizes = (config: DashboardGradientConfig): number[] => {
 
 const buildGradients = (config: DashboardGradientConfig): any[] => {
     
-    const sizes = buildSizes(config);
-    config.sizes = sizes;
-
-    const { count, dashboardCanvasContext, dashboardCanvasWidth, dashboardCanvasHeight, colors, gradients } = config
+    const { dashboardCanvasContext, dashboardCanvasWidth, dashboardCanvasHeight, count, sizes, colors, gradients } = config
     
     for (let i = 0; i < count; i++) {
         let rad = sizes[i];
@@ -58,10 +55,7 @@ const buildGradients = (config: DashboardGradientConfig): any[] => {
 
 const drawGradients = (config: DashboardGradientConfig): void => {
 
-    const gradients = buildGradients(config);
-    config.gradients = gradients;
-
-    const {dashboardCanvasContext, dashboardCanvasWidth, dashboardCanvasHeight, count , radiusStart, radiusInc} = config
+    const {dashboardCanvasContext, dashboardCanvasWidth, dashboardCanvasHeight, count , gradients, radiusStart, radiusInc} = config
 
     dashboardCanvasContext.fillStyle = '#fff';
     dashboardCanvasContext.fillRect(0, 0, dashboardCanvasWidth, dashboardCanvasHeight);
@@ -78,7 +72,7 @@ const drawGradients = (config: DashboardGradientConfig): void => {
 
 
 const dashboardCanvasConfig: DashboardCanvasConfig = {
-    dashboardCanvas: document.getElementById('gradient') as HTMLCanvasElement,
+    dashboardCanvas: document.getElementById('dashboardCanvas') as HTMLCanvasElement,
     dashboardCanvasWidth: 500,
     dashboardCanvasHeight: 500
 }
@@ -143,6 +137,12 @@ class DashboardAnimation implements DashboardAnimationPoint  {
         this.anchorY = config.y;
         this.x = config.x;
         this.y = config.y;
+        this.initialX = 0;
+        this.initialY = 0;
+        this.targetX = 0;
+        this.targetY = 0;
+        this.time = 0;
+        this.duration = 0;
         this.setTarget();
     }
 
@@ -219,4 +219,19 @@ const renderPoints = (): void => {
 
 const renderShape = (): void => {
     dashboardAnimationConfig.dashboardCanvasContext.beginPath();
+}
+
+
+/*
+    Complete
+*/
+
+const drawDashboard = () => {
+    const sizes = buildSizes(dashboardGradientConfig)
+    dashboardGradientConfig.sizes = sizes;
+
+    const gradients = buildGradients(dashboardGradientConfig);
+    dashboardGradientConfig.gradients = gradients;
+
+    drawGradients(dashboardGradientConfig);
 }
