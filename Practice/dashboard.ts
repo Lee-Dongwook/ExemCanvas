@@ -1,63 +1,14 @@
-type DashboardGradientColor = string[]
-type DashboardAnimationColor = string
-type DashboardAnimationRange = {
-    x: number,
-    y: number
-}
-type DashboardAnimationDuration = {
-    min: number,
-    max: number
-}
+import type { 
+    DashboardCanvasConfig, 
+    DashboardGradientConfig,
+    DashboardAnimationConfig,
+    DashboardAnimationCoordinateConfig,
+    DashboardAnimationPoint,
+} from '../Practice/dashboard.types'
 
-interface DashboardCanvasConfig {
-    dashboardCanvas: any
-    dashboardCanvasWidth: number
-    dashboardCanvasHeight: number
-}
-
-interface DashboardGradientConfig extends DashboardCanvasConfig {
-    dashboardCanvasContext: any
-    radiusStart: number 
-    radiusInc: number
-    count: number
-    sizes: number[]
-    gradients: any[]
-    colors: DashboardGradientColor[]   
-}
-
-interface DashboardAnimationConfig extends DashboardCanvasConfig {
-    dashboardCanvasContext: any
-    count: number
-    range: DashboardAnimationRange
-    duration: DashboardAnimationDuration
-    thickness: number
-    strokeColor: DashboardAnimationColor
-    level: number
-    curved: boolean
-}
-
-
-const dashboardCanvasConfig: DashboardCanvasConfig = {
-    dashboardCanvas: document.getElementById('gradient') as HTMLCanvasElement,
-    dashboardCanvasWidth: 500,
-    dashboardCanvasHeight: 500
-}
-
-const dashboardGradientConfig: DashboardGradientConfig = {
-    dashboardCanvas: dashboardCanvasConfig.dashboardCanvas,
-    dashboardCanvasContext: dashboardCanvasConfig.dashboardCanvas.getContext('2d'),
-    dashboardCanvasWidth: dashboardCanvasConfig.dashboardCanvasWidth,
-    dashboardCanvasHeight: dashboardCanvasConfig.dashboardCanvasHeight,
-    radiusStart: 30,
-    radiusInc: 30,
-    count: 2,
-    sizes: [],
-    gradients: [],
-    colors: [
-        ['#196df3', '#25273d'],
-        ['#594ed7', '#7b61ff']
-    ],
-}
+/*
+    Gradient
+*/
 
 const buildSizes = (config: DashboardGradientConfig): number[] => {
 
@@ -123,4 +74,149 @@ const drawGradients = (config: DashboardGradientConfig): void => {
         dashboardCanvasContext.fillStyle = gradients[i];
         dashboardCanvasContext.fill();
     }
+}
+
+
+const dashboardCanvasConfig: DashboardCanvasConfig = {
+    dashboardCanvas: document.getElementById('gradient') as HTMLCanvasElement,
+    dashboardCanvasWidth: 500,
+    dashboardCanvasHeight: 500
+}
+
+const dashboardGradientConfig: DashboardGradientConfig = {
+    dashboardCanvas: dashboardCanvasConfig.dashboardCanvas,
+    dashboardCanvasContext: dashboardCanvasConfig.dashboardCanvas.getContext('2d'),
+    dashboardCanvasWidth: dashboardCanvasConfig.dashboardCanvasWidth,
+    dashboardCanvasHeight: dashboardCanvasConfig.dashboardCanvasHeight,
+    radiusStart: 30,
+    radiusInc: 30,
+    count: 2,
+    sizes: [],
+    gradients: [],
+    colors: [
+        ['#196df3', '#25273d'],
+        ['#594ed7', '#7b61ff']
+    ],
+}
+
+
+/*
+    Animation
+*/
+
+const dashboardAnimationConfig: DashboardAnimationConfig = {
+    dashboardCanvas: dashboardCanvasConfig.dashboardCanvas,
+    dashboardCanvasContext: dashboardCanvasConfig.dashboardCanvas.getContext('2d'),
+    dashboardCanvasWidth: dashboardCanvasConfig.dashboardCanvasWidth,
+    dashboardCanvasHeight: dashboardCanvasConfig.dashboardCanvasHeight,
+    count: 5,
+    range: {
+      x: 20,
+      y: 80
+    },
+    duration: {
+      min: 20,
+      max: 40
+    },
+    thickness: 10,
+    strokeColor: '#444',
+    level: .35,
+    curved: true
+}
+
+const dashboardAnimationPoints: any[] = [];
+
+class DashboardAnimation implements DashboardAnimationPoint  {
+    anchorX: number
+    anchorY: number
+    x: number
+    y: number
+    initialX: number
+    initialY: number
+    targetX: number
+    targetY: number
+    time: number
+    duration: number
+
+    constructor(config) {
+        this.anchorX = config.x;
+        this.anchorY = config.y;
+        this.x = config.x;
+        this.y = config.y;
+        this.setTarget();
+    }
+
+    rand(min: number, max: number): number {
+        return Math.floor((Math.random() * (max - min + 1)) + min);
+    }
+
+    ease(time: number, coordinateConfig: DashboardAnimationCoordinateConfig): number {
+        const {begin, change, duration } = coordinateConfig
+        
+        if (( time/= duration / 2) < 1) return change / 2 * time * time + begin;
+	    
+        return -change / 2 * (( --time ) * ( time - 2 ) - 1) + begin;
+    }
+
+    setTarget(): void {
+        this.initialX = this.x;
+        this.initialY = this.y;
+        this.targetX = this.anchorX + this.rand(0, dashboardAnimationConfig.range.x * 2)
+        this.targetY = this.anchorY + this.rand(0, dashboardAnimationConfig.range.y * 2)
+        this.time = 0;
+        this.duration = this.rand(dashboardAnimationConfig.duration.min, dashboardAnimationConfig.duration.max );
+    }
+
+    update(): void {
+        let dx = this.targetX - this.x;
+        let dy = this.targetY - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        if(Math.abs(distance) <= 0) {
+            this.setTarget();
+        }
+        else {
+            let time = this.time;
+            
+            let xCoordinateConfig: DashboardAnimationCoordinateConfig = {
+                begin: this.initialX,
+                change: this.targetX - this.initialX,
+                duration: this.duration
+            };
+
+            let yCoordinateConfig: DashboardAnimationCoordinateConfig = {
+                begin: this.initialY,
+                change: this.targetY - this.initialY,
+                duration: this.duration
+            };
+
+            this.x = this.ease(time, xCoordinateConfig);
+            this.y = this.ease(time, yCoordinateConfig);
+            this.time++;
+        }
+
+    }
+
+    render(): void {
+        dashboardAnimationConfig.dashboardCanvasContext.beginPath();
+        dashboardAnimationConfig.dashboardCanvasContext.arc(this.x, this.y, 3, 0, Math.PI * 2, false);
+        dashboardAnimationConfig.dashboardCanvasContext.fillStyle = '#000';
+        dashboardAnimationConfig.dashboardCanvasContext.fill();
+    }
+}
+
+const updatePoints = (): void => {
+    dashboardAnimationPoints.forEach((point) => {
+        point.update();
+    })
+}
+
+const renderPoints = (): void => {
+    dashboardAnimationPoints.forEach((point) => {
+        point.render();
+    })
+}
+
+const renderShape = (): void => {
+    dashboardAnimationConfig.dashboardCanvasContext.beginPath();
 }
