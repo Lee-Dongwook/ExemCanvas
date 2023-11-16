@@ -6,7 +6,7 @@
     <title>DashBoard</title>
 </head>
 <body>
-<canvas id="dashboardCanvas" width="1000px", height="1000px"></canvas>
+<canvas id="dashboardCanvas" width="500px", height="500px"></canvas>
 <script>
     
     /* 초기 설정 */
@@ -116,13 +116,8 @@
 
     gradient(dashboardGradientConfig);
 
-
     /* Animation */
     const dashboardAnimationConfig  = {
-    dashboardCanvas: dashboardCanvas,
-    dashboardCanvasContext: dashboardCanvas.getContext('2d'),
-    dashboardCanvasWidth: dashboardCanvasWidth,
-    dashboardCanvasHeight: dashboardCanvasHeight,
     count: 5,
     range: {
       x: 20,
@@ -137,18 +132,27 @@
     level: .35,
     curved: true
     }
+    
+    let time = 0;
+    
+    dashboardCanvasContext.lineJoin = 'round';
+    dashboardCanvasContext.lineWidth = dashboardAnimationConfig.thickness;
+    dashboardCanvasContext.strokeStyle = dashboardAnimationConfig.strokeColor;
+
+    /* Animation Frame 저장 */
+    const dashboardAnimationPoints = [];
 
     class DashboardAnimation {
         constructor(config){
-            this.anchorX = config.range.x;
-            this.anchorY = config.range.y;
-            this.x = config.range.x;
-            this.y = config.range.y;
+            this.anchorX = config.x;
+            this.anchorY = config.y;
+            this.x = config.x;
+            this.y = config.y;
             this.initialX = 0;
             this.initialY = 0;
             this.targetX = 0;
             this.targetY = 0;
-            this.time = 0;
+            this.time = time;
             this.duration = 0;
             this.setTarget();
         }
@@ -214,10 +218,73 @@
             dashboardAnimationConfig.dashboardCanvasContext.fillStyle = '#000';
             dashboardAnimationConfig.dashboardCanvasContext.fill();
         }
-    }    
+    } 
+    
+    var i = dashboardAnimationConfig.count + 2;
+    var spacing = (dashboardCanvasWidth + (dashboardAnimationConfig.range.x * 2)) / (dashboardAnimationConfig.count - 1);
+    while(i--){
+        dashboardAnimationPoints.push(new DashboardAnimation({
+            x: (spacing * (i - 1)) - dashboardAnimationConfig.range.x,
+            y: dashboardCanvasHeight - (dashboardCanvasHeight * dashboardAnimationConfig.level)
+        }));
+    }
+    
 
-    const test = new DashboardAnimation(dashboardAnimationConfig);
-    console.log(test);
+    /* Frame의 상태 업데이트 */
+    const updatePoints = () => {
+        dashboardAnimationPoints.forEach((point) => {
+            point.update();
+        })
+    }
+
+
+    const renderPoints = () => {
+        dashboardAnimationPoints.forEach((point) => {
+            point.render();
+        })
+    }
+
+    const renderShape = () => {
+        dashboardCanvasContext.beginPath();
+
+        var pointCount = dashboardAnimationPoints.length;	  
+        var i;
+        for (i = 0; i < pointCount - 1; i++) {
+            var c = (dashboardAnimationPoints[i].x + dashboardAnimationPoints[i + 1].x) / 2;
+            var d = (dashboardAnimationPoints[i].y + dashboardAnimationPoints[i + 1].y) / 2;
+            dashboardCanvasContext.quadraticCurveTo(dashboardAnimationPoints[i].x, dashboardAnimationPoints[i].y, c, d);
+        }
+
+        dashboardCanvasContext.lineTo(
+            -dashboardAnimationConfig.range.x - dashboardAnimationConfig.thickness, 
+            dashboardCanvasHeight + dashboardAnimationConfig.thickness
+        );
+
+        dashboardCanvasContext.lineTo(
+            dashboardCanvasWidth + dashboardAnimationConfig.range.x + dashboardAnimationConfig.thickness, 
+            dashboardCanvasHeight + dashboardAnimationConfig.thickness
+        );
+
+        dashboardCanvasContext.closePath();
+        dashboardCanvasContext.fillStyle = '#000';
+        dashboardCanvasContext.fill();
+        dashboardCanvasContext.stroke();
+    };
+
+    const clear = () => {
+      dashboardCanvasContext.clearRect(0, 0, dashboardCanvasWidth, dashboardCanvasHeight);
+    };
+
+    const animation = () => {
+        requestAnimationFrame(animation, dashboardCanvas);
+        time++;
+        clear();
+        updatePoints();
+        renderShape();
+        // gradient(dashboardGradientConfig);
+    };
+
+    animation();
 
 </script>
 </body>
