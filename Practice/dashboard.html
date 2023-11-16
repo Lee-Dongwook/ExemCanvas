@@ -116,6 +116,109 @@
 
     gradient(dashboardGradientConfig);
 
+
+    /* Animation */
+    const dashboardAnimationConfig  = {
+    dashboardCanvas: dashboardCanvas,
+    dashboardCanvasContext: dashboardCanvas.getContext('2d'),
+    dashboardCanvasWidth: dashboardCanvasWidth,
+    dashboardCanvasHeight: dashboardCanvasHeight,
+    count: 5,
+    range: {
+      x: 20,
+      y: 80
+    },
+    duration: {
+      min: 20,
+      max: 40
+    },
+    thickness: 10,
+    strokeColor: '#444',
+    level: .35,
+    curved: true
+    }
+
+    class DashboardAnimation {
+        constructor(config){
+            this.anchorX = config.range.x;
+            this.anchorY = config.range.y;
+            this.x = config.range.x;
+            this.y = config.range.y;
+            this.initialX = 0;
+            this.initialY = 0;
+            this.targetX = 0;
+            this.targetY = 0;
+            this.time = 0;
+            this.duration = 0;
+            this.setTarget();
+        }
+
+        rand(min, max) {
+            return Math.floor((Math.random() * (max - min + 1)) + min);
+        }
+
+        
+        ease(time, coordinateConfig) {
+            const {begin, change, duration } = coordinateConfig
+        
+            if (( time/= duration / 2) < 1) return change / 2 * time * time + begin;
+	    
+            return -change / 2 * (( --time ) * ( time - 2 ) - 1) + begin;
+        }
+
+        setTarget() {
+            this.initialX = this.x;
+            this.initialY = this.y;
+            this.targetX = this.anchorX + this.rand(0, dashboardAnimationConfig.range.x * 2)
+            this.targetY = this.anchorY + this.rand(0, dashboardAnimationConfig.range.y * 2)
+            this.time = 0;
+            this.duration = this.rand(
+                dashboardAnimationConfig.duration.min, 
+                dashboardAnimationConfig.duration.max 
+            );
+        }
+
+        update() {
+        let dx = this.targetX - this.x;
+        let dy = this.targetY - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        if(Math.abs(distance) <= 0) {
+            this.setTarget();
+        }
+        else {
+            let time = this.time;
+            
+            let xCoordinateConfig = {
+                begin: this.initialX,
+                change: this.targetX - this.initialX,
+                duration: this.duration
+            };
+
+            let yCoordinateConfig = {
+                begin: this.initialY,
+                change: this.targetY - this.initialY,
+                duration: this.duration
+            };
+
+            this.x = this.ease(time, xCoordinateConfig);
+            this.y = this.ease(time, yCoordinateConfig);
+            this.time++;
+        }
+
+        }
+
+        render() {
+            dashboardAnimationConfig.dashboardCanvasContext.beginPath();
+            dashboardAnimationConfig.dashboardCanvasContext.arc(this.x, this.y, 3, 0, Math.PI * 2, false);
+            dashboardAnimationConfig.dashboardCanvasContext.fillStyle = '#000';
+            dashboardAnimationConfig.dashboardCanvasContext.fill();
+        }
+    }    
+
+    const test = new DashboardAnimation(dashboardAnimationConfig);
+    console.log(test);
+
 </script>
 </body>
 </html>
