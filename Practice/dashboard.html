@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DashBoard</title>
+</head>
+<body>
+<canvas id="dashboardCanvas" width="1000px", height="1000px"></canvas>
+<script>
+    
+    /* 초기 설정 */
+    const dashboardCanvas = document.getElementById('dashboardCanvas');
+    const dashboardCanvasContext = dashboardCanvas.getContext('2d');
+    
+    const dashboardCanvasWidth = dashboardCanvas.width; 
+    const dashboardCanvasHeight = dashboardCanvas.height;
+
+    /* Gradient */
+
+    const dashboardGradientConfig = {
+        dashboardCanvasContext: dashboardCanvasContext,
+        dashboardCanvasWidth: dashboardCanvasWidth,
+        dashboardCanvasHeight: dashboardCanvasHeight,
+        count: 2,
+        radiusStart: 30,
+        radiusInc: 30,
+        sizes: [],
+        gradients: [],
+        colors: [
+            ['#196df3', '#25273d'],
+            ['#594ed7', '#7b61ff'] 
+        ]
+    }
+
+    /* 그라데이션 적용할 크기 설정 */
+    const buildGradientSizes = (config) => {
+        const {count, radiusStart, radiusInc, sizes} = config;
+
+        for(let i = 0; i < count; i++)
+        {
+            let radius = radiusStart + radiusInc * (count - i - 1);
+            sizes.push(radius);
+        }
+
+        return sizes
+    }
+
+    /* 그라데이션 적용할 색상 설정 */
+    const buildGradientColors = (config) => {
+        const { dashboardCanvasContext, dashboardCanvasWidth, dashboardCanvasHeight, count, sizes, colors, gradients } = config
+        for(let i = 0 ; i < count; i++)
+        {
+            let radius = sizes[i];
+            let gradient;
+
+            if(i < count - 1) {
+                gradient = dashboardCanvasContext.createLinearGradient(
+                    dashboardCanvasWidth / 2 - radius,
+                    dashboardCanvasHeight / 2 - radius,
+                    dashboardCanvasWidth / 2 + radius,
+                    dashboardCanvasHeight / 2 + radius
+                )
+            } else {
+                 gradient = dashboardCanvasContext.createLinearGradient(
+                    dashboardCanvasWidth / 2 + radius,
+                    dashboardCanvasHeight / 2 - radius,
+                    dashboardCanvasWidth / 2 - radius,
+                    dashboardCanvasHeight / 2 + radius
+                )
+            }
+    
+            gradient.addColorStop(0, colors[i][0]);
+            gradient.addColorStop(1, colors[i][1]);
+            gradients.push(gradient);
+        }
+
+        return gradients;
+    }
+
+    /* 그라데이션 적용 */
+    const buildGradient = (config, baseColor = '#fff') => {
+        const {dashboardCanvasContext, dashboardCanvasWidth, dashboardCanvasHeight, count , gradients, radiusStart, radiusInc} = config
+        
+        // 초기설정
+        dashboardCanvasContext.fillStyle = baseColor;
+        dashboardCanvasContext.fillRect(0, 0, dashboardCanvasWidth, dashboardCanvasHeight);
+    
+        for(let i = 0; i < count; i++)
+        {
+            let radius = radiusStart + radiusInc * (count - i - 1);
+
+            dashboardCanvasContext.beginPath();
+            dashboardCanvasContext.arc(
+                dashboardCanvasWidth / 2, 
+                dashboardCanvasHeight / 2,
+                radius,
+                0,
+                Math.PI * 2
+            );
+            dashboardCanvasContext.fillStyle = gradients[i];
+            dashboardCanvasContext.fill();
+        }
+    }
+
+    /* 완성 */
+    const gradient = (config, baseColor = '#fff') => {
+        const sizes = buildGradientSizes(config);
+        config.sizes = sizes;
+
+        const colors = buildGradientColors(config);
+        config.gradients = colors;
+
+        buildGradient(config, baseColor);
+    }
+
+    gradient(dashboardGradientConfig);
+
+</script>
+</body>
+</html>
