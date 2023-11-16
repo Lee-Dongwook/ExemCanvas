@@ -10,7 +10,6 @@
             animation-duration: 4s;
             animation-iteration-count: infinite;
             animation-timing-function: linear;
-            animation-direction: reverse;
             width: 500px;
             height: 500px;
             position: relative;
@@ -41,26 +40,53 @@
         const kafkaOutCanvasContext = kafkaOutCanvas.getContext('2d');
 
         const kafkaOutConfig = {
-            x: 250,
-            y: 250,
-            radius: 200,
-            angleStart: 1.5 * Math.PI,
-            angleEnd: 0.7 * Math.PI
+            center: {
+                x: 250,
+                y: 250,
+            },
+            outerCircle: {
+                radius: 200,
+                angleStart: 0,
+                angleEnd: 1.75 * Math.PI,
+                lineWidth: 50,
+                strokeStyle: '#db9df9'
+            },
+
+            innerCircle: {
+                radius: 224,
+                angleStart: 0,
+                angleEnd: 2 * Math.PI,
+                lineWidth: 10,
+                fillStyle: '#000'
+            }
         };
 
-        const buildKafkaCircle = (config) => {
+        const buildKafkaInnerCircle = (config) => {
+            const {center, innerCircle} = config;
+
             kafkaOutCanvasContext.beginPath();
-            kafkaOutCanvasContext.arc(config.x, config.y, config.radius, 0, Math.PI * 0.9 * 2, false);
-            kafkaOutCanvasContext.lineWidth = 30;
-            kafkaOutCanvasContext.strokeStyle = '#93edff';
+            kafkaOutCanvasContext.arc(center.x, center.y, innerCircle.radius, innerCircle.angleStart, innerCircle.angleEnd, false);
+            kafkaOutCanvasContext.lineWidth = innerCircle.lineWidth;
+            kafkaOutCanvasContext.fillStyle = innerCircle.fillStyle;
+            kafkaOutCanvasContext.fill();
+        }
+
+        const buildKafkaOuterCircle = (config) => {
+            const {center, outerCircle} = config;
+
+            kafkaOutCanvasContext.beginPath();
+            kafkaOutCanvasContext.arc(center.x, center.y, outerCircle.radius, outerCircle.angleStart, outerCircle.angleEnd, false);
+            kafkaOutCanvasContext.lineWidth = outerCircle.lineWidth;
+            kafkaOutCanvasContext.strokeStyle = outerCircle.strokeStyle;
             kafkaOutCanvasContext.stroke();
         }
 
-        const kafkaIn = (config) => {
-            buildKafkaCircle(config);
+        const kafkaOut = (config) => {
+            buildKafkaInnerCircle(config);
+            buildKafkaOuterCircle(config);
         }
 
-        kafkaIn(kafkaInConfig);
+        kafkaOut(kafkaOutConfig);
     </script>
 </body>
 </html>

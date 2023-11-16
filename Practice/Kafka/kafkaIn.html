@@ -40,29 +40,44 @@
         const kafkaInCanvasContext = kafkaInCanvas.getContext('2d');
 
         const kafkaInConfig = {
-            x: 250,
-            y: 250,
-            outerRadius: 200,
-            innerRadius: 224,
-            outerAngleStart: 0,
-            outerAngleEnd: 1.75 * Math.PI,
-            innerAngleStart: 0,
-            innerAngleEnd: 2 * Math.PI
+            center: {
+                x: 250,
+                y: 250,
+            },
+            outerCircle: {
+                radius: 200,
+                angleStart: 0,
+                angleEnd: 1.75 * Math.PI,
+                lineWidth: 50,
+                strokeStyle: '#93edff'
+            },
+
+            innerCircle: {
+                radius: 224,
+                angleStart: 0,
+                angleEnd: 2 * Math.PI,
+                lineWidth: 10,
+                fillStyle: '#000'
+            }
         };
 
         const buildKafkaInnerCircle = (config) => {
+            const {center, innerCircle} = config;
+
             kafkaInCanvasContext.beginPath();
-            kafkaInCanvasContext.arc(config.x, config.y, config.innerRadius, config.innerAngleStart, config.innerAngleEnd, false);
-            kafkaInCanvasContext.lineWidth = 10;
-            kafkaInCanvasContext.fillStyle = '#000'
+            kafkaInCanvasContext.arc(center.x, center.y, innerCircle.radius, innerCircle.angleStart, innerCircle.angleEnd, false);
+            kafkaInCanvasContext.lineWidth = innerCircle.lineWidth;
+            kafkaInCanvasContext.fillStyle = innerCircle.fillStyle;
             kafkaInCanvasContext.fill();
         }
 
         const buildKafkaOuterCircle = (config) => {
+            const {center, outerCircle} = config;
+
             kafkaInCanvasContext.beginPath();
-            kafkaInCanvasContext.arc(config.x, config.y, config.outerRadius, config.outerAngleStart, config.outerAngleEnd, false);
-            kafkaInCanvasContext.lineWidth = 50;
-            kafkaInCanvasContext.strokeStyle = '#93edff';
+            kafkaInCanvasContext.arc(center.x, center.y, outerCircle.radius, outerCircle.angleStart, outerCircle.angleEnd, false);
+            kafkaInCanvasContext.lineWidth = outerCircle.lineWidth;
+            kafkaInCanvasContext.strokeStyle = outerCircle.strokeStyle;
             kafkaInCanvasContext.stroke();
         }
 
