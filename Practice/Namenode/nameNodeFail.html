@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Namenode Fail</title>
+    <style>
+        #nameNodeFailContainer {
+            animation-name: a0_t;
+            animation-duration: 4s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            width: 500px;
+            height: 500px;
+            position: relative;
+        }
+
+        @keyframes a0_t {
+          0% {
+            transform:  rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }   
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="nameNodeFailContainer">
+        <canvas id="nameNodeFailCanvas" width="600px" height="600px"></canvas>
+    </div>
+    <script>
+        const nameNodeFailCanvas = document.getElementById('nameNodeFailCanvas');
+        const nameNodeFailCanvasContext = nameNodeFailCanvas.getContext('2d');
+
+        const nameNodeFailConfig = {
+            center: {
+                x: 250,
+                y: 250,
+            },
+            innerCircle: {
+                radius: 150,
+                angleStart: 0,
+                angleEnd: 2 * Math.PI,
+                lineWidth: 10,
+                fillStyle: '#EEEEEE'
+            },
+            middleCircle: {
+                radius: 150,
+                angleStart: 0,
+                angleEnd: 1.75 * Math.PI,
+                lineWidth: 50,
+                strokeStyle: '#ea3975'
+            },
+            outerCircle: {
+                radius: 200,
+                angleStart: 0,
+                angleEnd: 2 * Math.PI,
+                strokeStyle: 'whitesmoke'
+            }
+        };
+
+        const buildNameNodeInnerCircle = (config) => {
+            const {center, innerCircle} = config;
+
+            nameNodeFailCanvasContext.beginPath();
+            nameNodeFailCanvasContext.arc(center.x, center.y, innerCircle.radius, innerCircle.angleStart, innerCircle.angleEnd, false);
+            nameNodeFailCanvasContext.lineWidth = innerCircle.lineWidth;
+            nameNodeFailCanvasContext.fillStyle = innerCircle.fillStyle;
+            nameNodeFailCanvasContext.fill();
+        }
+
+        const buildNameNodeMiddleCircle = (config) => {
+            const {center, middleCircle} = config;
+
+            nameNodeFailCanvasContext.beginPath();
+            nameNodeFailCanvasContext.arc(center.x, center.y, middleCircle.radius, middleCircle.angleStart, middleCircle.angleEnd, false);
+            nameNodeFailCanvasContext.lineWidth = middleCircle.lineWidth;
+            nameNodeFailCanvasContext.strokeStyle = middleCircle.strokeStyle;
+            nameNodeFailCanvasContext.stroke();
+        }
+
+        
+        const buildNameNodeOuterCircle = (config) => {
+            const {center, outerCircle} = config;
+
+            nameNodeFailCanvasContext.beginPath();
+            nameNodeFailCanvasContext.arc(center.x, center.y, outerCircle.radius, outerCircle.angleStart, outerCircle.angleEnd, false);
+            nameNodeFailCanvasContext.lineWidth = outerCircle.lineWidth;
+            nameNodeFailCanvasContext.strokeStyle = outerCircle.strokeStyle;
+            nameNodeFailCanvasContext.stroke();
+        }
+
+        const nameNodeFail = (config) => {
+            buildNameNodeInnerCircle(config);
+            buildNameNodeMiddleCircle(config);
+            buildNameNodeOuterCircle(config);
+        }
+
+        nameNodeFail(nameNodeFailConfig);
+    </script>
+</body>
+</html>
