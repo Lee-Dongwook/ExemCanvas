@@ -127,8 +127,8 @@
       min: 20,
       max: 40
     },
-    thickness: 10,
-    strokeColor: '#444',
+    thickness: 0,
+    strokeColor: '#50bcdf',
     level: .35,
     curved: true
     }
@@ -215,7 +215,7 @@
         render() {
             dashboardAnimationConfig.dashboardCanvasContext.beginPath();
             dashboardAnimationConfig.dashboardCanvasContext.arc(this.x, this.y, 3, 0, Math.PI * 2, false);
-            dashboardAnimationConfig.dashboardCanvasContext.fillStyle = '#000';
+            dashboardAnimationConfig.dashboardCanvasContext.fillStyle = '#50bcdf';
             dashboardAnimationConfig.dashboardCanvasContext.fill();
         }
     } 
@@ -266,22 +266,17 @@
         );
 
         dashboardCanvasContext.closePath();
-        dashboardCanvasContext.fillStyle = '#000';
+        dashboardCanvasContext.fillStyle = '#50bcdf';
         dashboardCanvasContext.fill();
         dashboardCanvasContext.stroke();
     };
 
-    const clear = () => {
-      dashboardCanvasContext.clearRect(0, 0, dashboardCanvasWidth, dashboardCanvasHeight);
-    };
-
     const animation = () => {
-        requestAnimationFrame(animation, dashboardCanvas);
+        gradient(dashboardGradientConfig);
         time++;
-        clear();
         updatePoints();
         renderShape();
-        // gradient(dashboardGradientConfig);
+        requestAnimationFrame(animation, dashboardCanvas); 
     };
 
     animation();
