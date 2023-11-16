@@ -4,7 +4,7 @@ import type {
     DashboardAnimationConfig,
     DashboardAnimationCoordinateConfig,
     DashboardAnimationPoint,
-} from '../Practice/dashboard.types'
+} from './dashboard.types'
 
 /*
     Gradient
