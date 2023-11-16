@@ -6,7 +6,7 @@
     <title>DashBoard</title>
 </head>
 <body>
-<canvas id="dashboardCanvas" width="500px", height="500px"></canvas>
+<canvas id="dashboardCanvas" width="1000px", height="1000px"></canvas>
 <script>
     
     /* 초기 설정 */
@@ -22,14 +22,15 @@
         dashboardCanvasContext: dashboardCanvasContext,
         dashboardCanvasWidth: dashboardCanvasWidth,
         dashboardCanvasHeight: dashboardCanvasHeight,
-        count: 2,
-        radiusStart: 30,
-        radiusInc: 30,
+        count: 3,
+        radiusStart: dashboardCanvasWidth / 4,
+        radiusInc: dashboardCanvasWidth / 10,
         sizes: [],
         gradients: [],
         colors: [
             ['#196df3', '#25273d'],
-            ['#594ed7', '#7b61ff'] 
+            ['#594ed7', '#7b61ff'],
+            ['#1a6cf2', '#000'], 
         ]
     }
 
@@ -255,15 +256,15 @@
             dashboardCanvasContext.quadraticCurveTo(dashboardAnimationPoints[i].x, dashboardAnimationPoints[i].y, c, d);
         }
 
-        dashboardCanvasContext.lineTo(
-            -dashboardAnimationConfig.range.x - dashboardAnimationConfig.thickness, 
-            dashboardCanvasHeight + dashboardAnimationConfig.thickness
-        );
+        // dashboardCanvasContext.lineTo(
+        //     -dashboardAnimationConfig.range.x - dashboardAnimationConfig.thickness, 
+        //     dashboardCanvasHeight + dashboardAnimationConfig.thickness
+        // );
 
-        dashboardCanvasContext.lineTo(
-            dashboardCanvasWidth + dashboardAnimationConfig.range.x + dashboardAnimationConfig.thickness, 
-            dashboardCanvasHeight + dashboardAnimationConfig.thickness
-        );
+        // dashboardCanvasContext.lineTo(
+        //     dashboardCanvasWidth + dashboardAnimationConfig.range.x + dashboardAnimationConfig.thickness, 
+        //     dashboardCanvasHeight + dashboardAnimationConfig.thickness
+        // );
 
         dashboardCanvasContext.closePath();
         dashboardCanvasContext.fillStyle = '#50bcdf';
