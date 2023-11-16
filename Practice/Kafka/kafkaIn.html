@@ -4,50 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kafka In</title>
+    <style>
+        #kafkaInContainer {
+            animation-name: a0_t;
+            animation-duration: 4s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+            width: 500px;
+            height: 500px;
+            position: relative;
+        }
+
+        @keyframes a0_t {
+          0% {
+            transform:  rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }   
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    </style>
 </head>
 <body>
-<canvas id="kafkaInCanvas" width="500px", height="500px"></canvas>
-<script>
-    const kafkaInCanvas = document.getElementById('kafkaInCanvas');
-    const kafkaInCanvasContext = kafkaInCanvas.getContext('2d');
+    <div id="kafkaInContainer">
+        <canvas id="kafkaInCanvas" width="500px" height="500px"></canvas>
+    </div>
+    <script>
+        const kafkaInCanvas = document.getElementById('kafkaInCanvas');
+        const kafkaInCanvasContext = kafkaInCanvas.getContext('2d');
 
-    const kafkaInConfig = {
-        x: 250,
-        y: 250,
-        radius: 200,
-        angleStart: 1.5 * Math.PI,
-        angleEnd: 0.7 * Math.PI
-    };
+        const kafkaInConfig = {
+            x: 250,
+            y: 250,
+            radius: 200,
+            angleStart: 1.5 * Math.PI,
+            angleEnd: 0.7 * Math.PI
+        };
 
-    const buildKafkaGradient = () => {
-        let gradient = kafkaInCanvasContext.createLinearGradient(0, 500, 0, 0);
-        gradient.addColorStop(0, '#c0e674');
-        gradient.addColorStop(1, '#40d6a5');
-    }
+        const buildKafkaCircle = (config) => {
+            kafkaInCanvasContext.beginPath();
+            kafkaInCanvasContext.arc(config.x, config.y, config.radius, 0, Math.PI * 0.9 * 2, false);
+            kafkaInCanvasContext.lineWidth = 30;
+            kafkaInCanvasContext.strokeStyle = '#93edff';
+            kafkaInCanvasContext.stroke();
+        }
 
-    const buildKafkaCircle = (config) => {
-        kafkaInCanvasContext.beginPath();
-        kafkaInCanvasContext.arc(config.x, config.x, config.radius, 0, 2 * Math.PI, false);
-        kafkaInCanvasContext.lineWidth = 30;
-        kafkaInCanvasContext.strokeStyle = '#EEEEEE';
-        kafkaInCanvasContext.stroke();
-    }
+        const kafkaIn = (config) => {
+            buildKafkaCircle(config);
+        }
 
-    const buildKafkaArc = (config) => {
-        kafkaInCanvasContext.beginPath();
-        kafkaInCanvasContext.arc(config.x, config.y, config.radius, config.angleStart, config.angleEnd);
-        kafkaInCanvasContext.lineWidth = 30;
-        kafkaInCanvasContext.lineCap = 'round';
-        kafkaInCanvasContext.stroke();
-    }
-
-    const kafkaIn = (config) => {
-        buildKafkaGradient();
-        buildKafkaCircle(config);
-        buildKafkaArc(config);
-    }
-
-    kafkaIn(kafkaInConfig);
-</script>
+        kafkaIn(kafkaInConfig);
+    </script>
 </body>
 </html>
