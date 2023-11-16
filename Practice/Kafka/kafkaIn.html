@@ -3,11 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DashBoard</title>
+    <title>Kafka In</title>
 </head>
 <body>
 <canvas id="kafkaInCanvas" width="500px", height="500px"></canvas>
 <script>
+    const kafkaInCanvas = document.getElementById('kafkaInCanvas');
+    const kafkaInCanvasContext = kafkaInCanvas.getContext('2d');
+
+    const kafkaInConfig = {
+        x: 250,
+        y: 250,
+        radius: 200,
+        angleStart: 1.5 * Math.PI,
+        angleEnd: 0.7 * Math.PI
+    };
+
+    const buildKafkaGradient = () => {
+        let gradient = kafkaInCanvasContext.createLinearGradient(0, 500, 0, 0);
+        gradient.addColorStop(0, '#c0e674');
+        gradient.addColorStop(1, '#40d6a5');
+    }
+
+    const buildKafkaCircle = (config) => {
+        kafkaInCanvasContext.beginPath();
+        kafkaInCanvasContext.arc(config.x, config.x, config.radius, 0, 2 * Math.PI, false);
+        kafkaInCanvasContext.lineWidth = 30;
+        kafkaInCanvasContext.strokeStyle = '#EEEEEE';
+        kafkaInCanvasContext.stroke();
+    }
+
+    const buildKafkaArc = (config) => {
+        kafkaInCanvasContext.beginPath();
+        kafkaInCanvasContext.arc(config.x, config.y, config.radius, config.angleStart, config.angleEnd);
+        kafkaInCanvasContext.lineWidth = 30;
+        kafkaInCanvasContext.lineCap = 'round';
+        kafkaInCanvasContext.stroke();
+    }
+
+    const kafkaIn = (config) => {
+        buildKafkaGradient();
+        buildKafkaCircle(config);
+        buildKafkaArc(config);
+    }
+
+    kafkaIn(kafkaInConfig);
 </script>
 </body>
 </html>
