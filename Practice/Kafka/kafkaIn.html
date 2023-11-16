@@ -42,21 +42,33 @@
         const kafkaInConfig = {
             x: 250,
             y: 250,
-            radius: 200,
-            angleStart: 1.5 * Math.PI,
-            angleEnd: 0.7 * Math.PI
+            outerRadius: 200,
+            innerRadius: 224,
+            outerAngleStart: 0,
+            outerAngleEnd: 1.75 * Math.PI,
+            innerAngleStart: 0,
+            innerAngleEnd: 2 * Math.PI
         };
 
-        const buildKafkaCircle = (config) => {
+        const buildKafkaInnerCircle = (config) => {
             kafkaInCanvasContext.beginPath();
-            kafkaInCanvasContext.arc(config.x, config.y, config.radius, 0, Math.PI * 0.9 * 2, false);
-            kafkaInCanvasContext.lineWidth = 30;
+            kafkaInCanvasContext.arc(config.x, config.y, config.innerRadius, config.innerAngleStart, config.innerAngleEnd, false);
+            kafkaInCanvasContext.lineWidth = 10;
+            kafkaInCanvasContext.fillStyle = '#000'
+            kafkaInCanvasContext.fill();
+        }
+
+        const buildKafkaOuterCircle = (config) => {
+            kafkaInCanvasContext.beginPath();
+            kafkaInCanvasContext.arc(config.x, config.y, config.outerRadius, config.outerAngleStart, config.outerAngleEnd, false);
+            kafkaInCanvasContext.lineWidth = 50;
             kafkaInCanvasContext.strokeStyle = '#93edff';
             kafkaInCanvasContext.stroke();
         }
 
         const kafkaIn = (config) => {
-            buildKafkaCircle(config);
+            buildKafkaInnerCircle(config);
+            buildKafkaOuterCircle(config);
         }
 
         kafkaIn(kafkaInConfig);
