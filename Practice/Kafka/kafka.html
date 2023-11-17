@@ -5,59 +5,142 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kafka</title>
     <style>
-        body {
-            height: 420px;
-            width: 680px;
+        #kafkaContainer {
+            width: 600px;
+            height: 600px;
+            position: relative;
         }
 
         canvas {
-            width: 100%;
-            height: 100%;
-            border-radius: 10%;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
     </style>
 </head>
 <body>
-<canvas id="kafkaCanvas" width="32px" height="32px">
+    <div id = "kafkaContainer">
+      <canvas id="kafkaCanvas" width="600px" height="600px">       
+    </div>
 <script>
-    const canvas = document.getElementById('kafkaCanvas');
-    const context = canvas.getContext('2d');
-    let time = 0;
-
-    const color = function (x, y) {
-        context.fillStyle = '#000'
-        context.fillRect(x, y, 10, 10);
-    }
+    const kafkaCanvas = document.getElementById('kafkaCanvas');
+    const kafkaCanvasContext = kafkaCanvas.getContext('2d');
     
-    // const R = function (x, y, time) {
-    //     return (Math.floor(192 + 64 * Math.cos((x * x - y * y) / 300 + time)));
-    // }
+    const kafkaCanvasWidth = kafkaCanvas.width;
+    const kafkaCanvasHeight = kafkaCanvas.height;
 
-    // const G = function (x, y, time) {
-    //     return (Math.floor(192 + 64 * Math.sin((x * x * Math.cos(time / 4) + y * y * Math.sin(time / 3)) / 300)));
-    // }
+    const kafkaWaveAnimationPoint = [];
 
-    // const B = function (x, y, time) {
-    //     return (Math.floor(192 + 64 * Math.sin(5 * Math.sin(time / 9) + ((x - 100) * (x - 100) + (y - 100) * (y - 100)) / 1100)));
-    // }
 
-    const startAnimation = function () {
-        // for (x = 0; x <= 30; x++) {
-        //     for (y = 0; y <= 30; y++) {
-        //         color(x, y, R(x, y, time), G(x, y, time), B(x, y, time));
-        //     }
-        // }
-        for(x = 0; x <= 30; x++){
-            for(y = 0; y <= 30; y++){
-                color(x,y);
+    const kafkaConfig = {
+        center: {
+            x: 100,
+            y: 100,
+        },
+        outerRect: {
+            width: 400,
+            height: 200,
+            radius: 0,
+            lineWidth: 15,
+            lineJoin: 'round',
+            strokeStyle: '#7ab3f7'
+        },
+        innerRect: {
+            width: 400,
+            height: 200,
+            radius: 10,
+            fillStyle: '#000'
+        },
+
+        waveAnimation: {
+            x: 0,
+            y: 0,
+            alt: 0,
+            time: 0,
+            pointCount: 12,
+            pointSpeed: 6,
+            verticalPointRange: 60,
+            spacing: kafkaCanvasWidth / 12,
+        }
+    }
+
+    const buildKafkaOuterRect = (config) => {
+        
+        const {center, outerRect} = config;
+
+        kafkaCanvasContext.beginPath();
+        kafkaCanvasContext.lineWidth = outerRect.lineWidth;
+        kafkaCanvasContext.lineJoin = outerRect.lineJoin;
+        kafkaCanvasContext.strokeStyle = outerRect.strokeStyle;
+        kafkaCanvasContext.strokeRect(
+            center.x + (outerRect.radius / 2), 
+            center.y + (outerRect.radius / 2),
+            outerRect.width - outerRect.radius,
+            outerRect.height - outerRect.radius
+            )
+        kafkaCanvasContext.stroke();
+    }
+
+    const buildKafkaInnerRect = (config) => {
+
+        const {center, innerRect} = config;
+
+        kafkaCanvasContext.fillStyle = innerRect.fillStyle;
+        kafkaCanvasContext.fillRect(
+            center.x + (innerRect.radius / 2), 
+            center.y + (innerRect.radius / 2), 
+            innerRect.width - innerRect.radius, 
+            innerRect.height - innerRect.radius);
+    }
+
+    class Point {
+        constructor(config){
+            this.x = config.waveAnimation.x;
+            this.y = config.waveAnimation.y;
+            this.yStart = config.waveAnimation.y;
+            this.alt = config.waveAnimation.alt;
+            this.time = config.waveAnimation.time;
+            this.pointCount = config.waveAnimation.pointCount;
+            this.pointSpeed = config.waveAnimation.pointSpeed;
+            this.verticalPointRange = config.waveAnimation.verticalPointRange;
+            this.spacing = config.waveAnimation.spacing
+        }
+
+        randomRange(min, max) {
+            return Math.floor((Math.random() * (max - min + 1)) + min);
+        }
+
+        update(idx) {
+            let range = (this.alt) ? this.verticalPointRange : - this.verticalPointRange;
+            this.x += this.pointSpeed;
+            this.y = (this.yStart) + Math.sin(this.time / 14) * (-range);
+            
+            if(this.x > kafkaCanvasWidth + this.spacing) {
+                this.x = -this.spacing;
+                let moved = kafkaWaveAnimationPoint.splice(idx, 1);
+                kafkaWaveAnimationPoint.unshift(moved[0]);
             }
         }
-                
-        time = time + 0.03;
-        window.requestAnimationFrame(startAnimation);
     }
 
-    startAnimation();
+    for(let iPoints = 0; iPoints < kafkaConfig.waveAnimation.pointCount; iPoints++){
+        let alt = (iPoints % 2 === 0);
+        let offset = (alt) ? kafkaConfig.waveAnimation.verticalPointRange : -kafkaConfig.waveAnimation.verticalPointRange
+
+        kafkaWaveAnimationPoint.push(new Point(
+            
+        ))
+    }
+
+
+
+    const kafka = (config) => {
+        buildKafkaOuterRect(config);
+        buildKafkaInnerRect(config);
+    }
+
+    kafka(kafkaConfig)
+
 </script>
 </body>
 </html>
