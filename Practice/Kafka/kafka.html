@@ -4,33 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kafka</title>
-    <style>
-        #kafkaContainer {
-            width: 600px;
-            height: 600px;
-            position: relative;
-        }
-
-        canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-    </style>
 </head>
 <body>
-    <div id = "kafkaContainer">
-      <canvas id="kafkaCanvas" width="600px" height="600px">       
-    </div>
+    <canvas id="kafkaCanvas" width="600px" height="600px"></canvas>     
+    <canvas id="kafkaAnimationCanvas" width="300px" height="400px"></canvas>  
 <script>
     const kafkaCanvas = document.getElementById('kafkaCanvas');
     const kafkaCanvasContext = kafkaCanvas.getContext('2d');
     
     const kafkaCanvasWidth = kafkaCanvas.width;
     const kafkaCanvasHeight = kafkaCanvas.height;
-
-    const kafkaWaveAnimationPoint = [];
-
 
     const kafkaConfig = {
         center: {
@@ -52,16 +35,6 @@
             fillStyle: '#000'
         },
 
-        waveAnimation: {
-            x: 0,
-            y: 0,
-            alt: 0,
-            time: 0,
-            pointCount: 12,
-            pointSpeed: 6,
-            verticalPointRange: 60,
-            spacing: kafkaCanvasWidth / 12,
-        }
     }
 
     const buildKafkaOuterRect = (config) => {
@@ -93,54 +66,175 @@
             innerRect.height - innerRect.radius);
     }
 
+    /*Animation*/
+
+    const kafkaAnimationCanvas = document.getElementById('kafkaAnimationCanvas')
+    const kafkaAnimationCanvasContext = kafkaAnimationCanvas.getContext('2d');
+
+    const kafkaAnimationCanvasWidth = kafkaAnimationCanvas.width;
+    const kafkaAnimationCanvasHeight = kafkaAnimationCanvas.height;
+    
+    const kafkaAnimationPoint = [];
+    let time = 0;
+
+    const kafkaAnimationConfig = {
+        count: 5,
+        range:{
+         x: 20,
+         y: 80
+        },
+        duration:{
+        min: 20,
+        max: 40
+        },
+        thickness: 5,
+        strokeColor: 'skyblue',
+        level: .35,
+        curved: true
+    }
+
+    kafkaAnimationCanvasContext.lineJoin = 'round';
+    kafkaAnimationCanvasContext.lineWidth = kafkaAnimationConfig.thickness;
+    kafkaAnimationCanvasContext.strokeStyle = kafkaAnimationConfig.strokeColor;
+
+    const rand = (min, max) => {
+        return Math.floor((Math.random() * (max - min + 1)) + min);
+    }
+
+    const ease = (time, coordinateConfig) => {
+	    if (( time/= coordinateConfig.duration / 2) < 1) return coordinateConfig.change / 2 * time * time + coordinateConfig.begin;
+	    return -coordinateConfig.change / 2 * (( --time ) * ( time - 2 ) - 1) + coordinateConfig.begin;
+    };
+
     class Point {
-        constructor(config){
-            this.x = config.waveAnimation.x;
-            this.y = config.waveAnimation.y;
-            this.yStart = config.waveAnimation.y;
-            this.alt = config.waveAnimation.alt;
-            this.time = config.waveAnimation.time;
-            this.pointCount = config.waveAnimation.pointCount;
-            this.pointSpeed = config.waveAnimation.pointSpeed;
-            this.verticalPointRange = config.waveAnimation.verticalPointRange;
-            this.spacing = config.waveAnimation.spacing
-        }
+      
+      constructor(config) {
+        this.anchorX = config.x;
+        this.anchorY = config.y;
+        this.x = config.x;
+        this.y = config.y;
+        this.setTarget();
+      };
 
-        randomRange(min, max) {
-            return Math.floor((Math.random() * (max - min + 1)) + min);
-        }
+      setTarget() {
+        this.initialX = this.x;
+        this.initialY = this.y;
+        this.targetX = this.anchorX + rand(0, kafkaAnimationConfig.range.x * 2) - kafkaAnimationConfig.range.x;
+        this.targetY = this.anchorY + rand(0, kafkaAnimationConfig.range.y * 2) - kafkaAnimationConfig.range.y;
+        this.time = 0;
+        this.duration = rand(kafkaAnimationConfig.duration.min, kafkaAnimationConfig.duration.max);
+      }
 
-        update(idx) {
-            let range = (this.alt) ? this.verticalPointRange : - this.verticalPointRange;
-            this.x += this.pointSpeed;
-            this.y = (this.yStart) + Math.sin(this.time / 14) * (-range);
-            
-            if(this.x > kafkaCanvasWidth + this.spacing) {
-                this.x = -this.spacing;
-                let moved = kafkaWaveAnimationPoint.splice(idx, 1);
-                kafkaWaveAnimationPoint.unshift(moved[0]);
-            }
+      update() {
+        let dx = this.targetX - this.x;
+        let dy = this.targetY - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        if(Math.abs(distance) <= 0) {
+          this.setTarget();
+        } else {
+          let time = this.time;
+
+          let yCoordinateConfig = {
+            begin: this.initialY,
+            change: this.targetY - this.initialY,
+            duration: this.duration
+          };
+
+          this.y = ease(time, yCoordinateConfig);
+
+          let xCoordinateConfig = {
+            begin: this.initialX,
+            change: this.targetX - this.initialX,
+            duration: this.duration
+          };
+
+          this.x = ease(time, xCoordinateConfig);
+
+          this.time++;
         }
+      }
+
+      render() {
+          kafkaAnimationCanvasContext.beginPath();
+          kafkaAnimationCanvasContext.arc(this.x, this.y, 3, 0, Math.PI * 2, false);
+          kafkaAnimationCanvasContext.fillStyle = '#000';
+          kafkaAnimationCanvasContext.fill();
+      }
     }
 
-    for(let iPoints = 0; iPoints < kafkaConfig.waveAnimation.pointCount; iPoints++){
-        let alt = (iPoints % 2 === 0);
-        let offset = (alt) ? kafkaConfig.waveAnimation.verticalPointRange : -kafkaConfig.waveAnimation.verticalPointRange
-
-        kafkaWaveAnimationPoint.push(new Point(
-            
-        ))
+    const createPoint = () => {
+        let i = kafkaAnimationConfig.count + 2;
+        let spacing = (kafkaAnimationCanvasWidth + (kafkaAnimationConfig.range.x * 2)) / (kafkaAnimationConfig.count - 1);
+        while(i--){
+            kafkaAnimationPoint.push(new Point({
+                x: (spacing * (i - 1)) - kafkaAnimationConfig.range.x,
+                y: kafkaAnimationCanvasHeight - (kafkaAnimationCanvasHeight * kafkaAnimationConfig.level)
+            }));
+        }
     }
+    
+    const updatePoint = () => {
+      kafkaAnimationPoint.forEach((point) => {
+          point.update();
+      });
+    };
 
+    const renderPoint = () => {
+      kafkaAnimationPoint.forEach((point) => {
+          point.render();
+      })
+    };
 
+    const renderShape = () => {
 
+      kafkaAnimationCanvasContext.beginPath();
+
+      var pointCount = kafkaAnimationPoint.length;	  
+      var i;
+      for (i = 0; i < pointCount - 1; i++) {
+        var c = (kafkaAnimationPoint[i].x + kafkaAnimationPoint[i + 1].x) / 2;
+        var d = (kafkaAnimationPoint[i].y + kafkaAnimationPoint[i + 1].y) / 2;
+        kafkaAnimationCanvasContext.quadraticCurveTo(kafkaAnimationPoint[i].x, kafkaAnimationPoint[i].y, c, d);
+      }
+      
+      kafkaAnimationCanvasContext.lineTo(
+        -kafkaAnimationConfig.range.x - kafkaAnimationConfig.thickness, 
+        kafkaCanvasHeight + kafkaAnimationConfig.thickness
+      );
+
+      kafkaAnimationCanvasContext.lineTo(
+        kafkaAnimationCanvasWidth + kafkaAnimationConfig.range.x + kafkaAnimationConfig.thickness, 
+        kafkaAnimationCanvasHeight + kafkaAnimationConfig.thickness
+      );
+
+      kafkaAnimationCanvasContext.closePath();
+      kafkaAnimationCanvasContext.fillStyle = 'skyblue';
+      kafkaAnimationCanvasContext.fill();
+      kafkaAnimationCanvasContext.stroke();
+
+    };
+
+    const clear = () => {
+      kafkaAnimationCanvasContext.clearRect(0, 0, kafkaAnimationCanvasWidth, kafkaAnimationCanvasHeight);
+    };
+
+    const loop = () => {
+        requestAnimationFrame(loop, kafkaAnimationCanvas);
+        time++;
+        clear();
+        createPoint();
+        updatePoint();
+        renderShape();
+    }
+   
     const kafka = (config) => {
         buildKafkaOuterRect(config);
         buildKafkaInnerRect(config);
+        loop();
     }
 
-    kafka(kafkaConfig)
-
+    kafka(kafkaConfig);
 </script>
 </body>
 </html>
