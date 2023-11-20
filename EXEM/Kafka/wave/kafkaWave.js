@@ -58,7 +58,7 @@ class Point {
         this.x = x;
         this.y = y;
         this.fixedY = y;
-        this.speed = 0.05;
+        this.speed = 0.1;
         this.cur = index;
     }
 
@@ -170,7 +170,7 @@ class App {
         this.canvas = document.getElementById('wave');
         this.ctx = this.canvas.getContext('2d');
         this.stageWidth = kafkaCanvas.width;
-        this.stageHeight = kafkaCanvas.height;
+        this.stageHeight = kafkaCanvas.height / 2;
 
         document.body.appendChild(this.canvas);
 
