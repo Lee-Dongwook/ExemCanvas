@@ -56,7 +56,8 @@
                 angleStart: 0,
                 angleEnd: 1.75 * Math.PI,
                 lineWidth: 50,
-                strokeStyle: '#b378ff'
+                startColor: 'rgb(179, 120, 255, 0)',
+                endColor: 'rgb(160,111,239,1)'
             },
             outerCircle: {
                 radius: 200,
@@ -79,10 +80,14 @@
         const buildNameNodeMiddleCircle = (config) => {
             const {center, middleCircle} = config;
 
+            const gradient = nameNodeActiveCanvasContext.createRadialGradient(center.x, center.y, 0, center.x, center.y, middleCircle.radius);
+            gradient.addColorStop(0.415, middleCircle.startColor);
+            gradient.addColorStop(1,middleCircle.endColor);
+
             nameNodeActiveCanvasContext.beginPath();
             nameNodeActiveCanvasContext.arc(center.x, center.y, middleCircle.radius, middleCircle.angleStart, middleCircle.angleEnd, false);
             nameNodeActiveCanvasContext.lineWidth = middleCircle.lineWidth;
-            nameNodeActiveCanvasContext.strokeStyle = middleCircle.strokeStyle;
+            nameNodeActiveCanvasContext.strokeStyle = gradient;
             nameNodeActiveCanvasContext.stroke();
         }
 
