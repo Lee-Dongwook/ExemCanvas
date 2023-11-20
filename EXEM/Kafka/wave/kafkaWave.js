@@ -58,13 +58,13 @@ class Point {
         this.x = x;
         this.y = y;
         this.fixedY = y;
-        this.speed = 0.1;
-        this.cur = index;
+        this.speed = 0.05; // Wave의 속도 조절 부분
+        this.cur = index; 
     }
 
     update() {
         this.cur += this.speed;
-        this.y = this.fixedY + Math.sin(this.cur) * 50;
+        this.y = this.fixedY + Math.sin(this.cur) * 20;
     }
 }
 
@@ -76,6 +76,7 @@ class Wave {
         this.points = [];
     }
 
+    // 해당 함수의 centerY 변수로 중심 y좌표를 움직여서 높이 지정
     resize(stageWidth, stageHeight) {
         this.stageWidth = stageWidth;
         this.stageHeight = stageHeight;
