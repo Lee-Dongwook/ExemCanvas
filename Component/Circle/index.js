@@ -11,7 +11,20 @@ const innerCircleConfig = {
     angleStart: 0,
     angleEnd: 2 * Math.PI,
     lineWidth: 10,
-    fillStyle: '#000'
+    fillStyle: '#000',
+    gradient: {
+        startX: 0,
+        startY: 0,
+        endX: 0,
+        endY: 0,
+        colorSet : [{
+           offset: 0,
+           color: '#FFFFFF'
+        }, {
+           offset: 1,
+           color: '#EEEEEE'
+        }]       
+    }
 }
 
 const outerCircleConfig = {
@@ -21,7 +34,7 @@ const outerCircleConfig = {
     angleStart: 0,
     angleEnd: 2 * Math.PI,
     lineWidth: 50,
-    strokeStyle: '#196df3'
+    strokeStyle: '#196df3',
 }
 
 class App {
@@ -49,6 +62,18 @@ class App {
 
     animate() {
         this.ctx.clearRect(0, 0, this.stageWidth, this.stageHeight);
+        if(innerCircleConfig.gradient) {
+            const gradientObject = new Gradient(innerCircleConfig);
+            const gradient = gradientObject.createGradient(this.ctx);
+            innerCircleConfig.fillStyle = gradient;
+        }
+
+        if(outerCircleConfig.gradient) {
+            const gradientObject = new Gradient(outerCircleConfig);
+            const gradient = gradientObject.createGradient(this.ctx);
+            outerCircleConfig.fillStyle = gradient;
+        }
+
         this.innerCircle.draw(this.ctx);
         this.outerCircle.draw(this.ctx);
         requestAnimationFrame(this.animate.bind(this));

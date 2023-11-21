@@ -5,6 +5,8 @@ class InnerCircle {
         this.radius = config.radius;
         this.angleStart = config.angleStart;
         this.angleEnd = config.angleEnd;
+        this.gradient = config.gradient;
+        this.fillStyle = config.fillStyle;
     }
 
     resize(stageWidth, stageHeight){
