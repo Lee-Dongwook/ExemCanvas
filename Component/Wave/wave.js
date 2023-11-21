@@ -1,8 +1,8 @@
-const kafkaCanvas = document.getElementById('wave');
-const kafkaCanvasContext = kafkaCanvas.getContext('2d');
+const waveCanvas = document.getElementById('wave');
+const waveCanvasContext = waveCanvas.getContext('2d');
 
-const kafkaCanvasWidth = kafkaCanvas.width;
-const kafkaCanvasHeight = kafkaCanvas.height;
+const waveCanvasWidth = waveCanvas.width;
+const waveCanvasHeight = waveCanvas.height;
 
 const kafkaConfig = {
     center: {
@@ -28,24 +28,24 @@ const kafkaConfig = {
 const buildKafkaOuterRect = (config) => {
     const { center, outerRect } = config;
 
-    kafkaCanvasContext.beginPath();
-    kafkaCanvasContext.lineWidth = outerRect.lineWidth;
-    kafkaCanvasContext.lineJoin = outerRect.lineJoin;
-    kafkaCanvasContext.strokeStyle = outerRect.strokeStyle;
-    kafkaCanvasContext.strokeRect(
+    waveCanvasContext.beginPath();
+    waveCanvasContext.lineWidth = outerRect.lineWidth;
+    waveCanvasContext.lineJoin = outerRect.lineJoin;
+    waveCanvasContext.strokeStyle = outerRect.strokeStyle;
+    waveCanvasContext.strokeRect(
         center.x + (outerRect.radius / 2),
         center.y + (outerRect.radius / 2),
         outerRect.width - outerRect.radius,
         outerRect.height - outerRect.radius
     );
-    kafkaCanvasContext.stroke();
+    waveCanvasContext.stroke();
 }
 
 const buildKafkaInnerRect = (config) => {
     const { center, innerRect } = config;
 
-    kafkaCanvasContext.fillStyle = innerRect.fillStyle;
-    kafkaCanvasContext.fillRect(
+    waveCanvasContext.fillStyle = innerRect.fillStyle;
+    waveCanvasContext.fillRect(
         center.x + (innerRect.radius / 2),
         center.y + (innerRect.radius / 2),
         innerRect.width - innerRect.radius,
@@ -170,8 +170,8 @@ class App {
     constructor() {
         this.canvas = document.getElementById('wave');
         this.ctx = this.canvas.getContext('2d');
-        this.stageWidth = kafkaCanvas.width;
-        this.stageHeight = kafkaCanvas.height / 2;
+        this.stageWidth = waveCanvas.width;
+        this.stageHeight = waveCanvas.height / 2;
 
         document.body.appendChild(this.canvas);
 
