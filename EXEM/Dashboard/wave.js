@@ -11,9 +11,9 @@ class Wave {
         this.stageHeight = stageHeight;
 
         this.centerX = stageWidth / 2;
-        this.centerY = stageHeight / 2;
+        this.centerY = stageHeight - 100;
 
-        this.pointGap = this.stageWidth / (this.totalPoints - 1);
+        this.pointGap = (this.stageWidth - 30) / (this.totalPoints - 1);
 
         this.init();
     }
@@ -34,7 +34,7 @@ class Wave {
         ctx.beginPath();
         ctx.fillStyle = this.color;
 
-        let prevX = this.points[0].x;
+        let prevX = this.points[0].x + 80;
         let prevY = this.points[0].y;
 
         ctx.moveTo(prevX, prevY);
@@ -54,8 +54,6 @@ class Wave {
         }
 
         ctx.lineTo(prevX, prevY);
-        ctx.lineTo(this.stageWidth, this.stageHeight);
-        ctx.lineTo(this.points[0].x, this.stageHeight);
         ctx.fill();
         ctx.closePath();
     }

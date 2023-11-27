@@ -12,8 +12,8 @@ const kafkaConfig = {
     outerRect: {
       width: 500,
       height: 500,
-      radius: 0,
-      lineWidth: 15,
+      radius: 10,
+      lineWidth: 30,
       lineJoin: 'round',
       strokeStyle: '#7ab3f7'
     },
@@ -47,7 +47,7 @@ class App {
         this.canvas.width = this.stageWidth;
         this.canvas.height = this.stageHeight;
 
-        this.waveGroup.resize(this.stageWidth, this.stageHeight);
+        this.waveGroup.resize(this.stageWidth - kafkaConfig.innerRect.radius / 2, this.stageHeight);
     }
 
     animate(time) {

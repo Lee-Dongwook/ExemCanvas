@@ -20,7 +20,7 @@ class WaveGroup {
     resize(stageWidth, stageHeight) {
         for (let i = 0; i < this.totalWaves; i++) {
             const wave = this.waves[i];
-            wave.resize(stageWidth, stageHeight);
+            wave.resize(stageWidth - 50, stageHeight - 50);
         }
     }
 
