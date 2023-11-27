@@ -24,7 +24,7 @@ const dashboardConfig = {
         fillStyle: '#000'
     },
     wave: {
-       data: 30,
+       data: 25,
     }
 };
 
@@ -76,7 +76,7 @@ class Wave {
         this.stageHeight = stageHeight;
 
         this.centerX = stageWidth / 2;
-        this.centerY = stageHeight - 100;
+        this.centerY = dashboardConfig.center.y + dashboardConfig.outerCircle.radius;
 
         this.pointGap = (this.stageWidth) / (this.totalPoints - 1);
 
@@ -118,11 +118,8 @@ class Wave {
             prevY = this.points[i].y;
         }
 
-        const controlX = this.stageWidth / 2;
-        const controlY = this.stageHeight;
-
-        ctx.arcTo(prevX, prevY, controlX, controlY, 20);
-        ctx.arcTo(controlX, controlY, this.points[0].x, this.points[0].y, 20);
+        ctx.arcTo(this.stageWidth / 2, this.stageHeight, this.points[0].x, this.points[0].y, 0);
+        // ctx.quadraticCurveTo(this.stageWidth / 2, dashboardConfig.center.y + dashboardConfig.outerCircle.radius, this.points[this.totalPoints - 1].x , this.points[this.totalPoints - 1].y);
         ctx.fill();
         ctx.closePath();
     }
