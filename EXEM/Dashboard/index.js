@@ -88,7 +88,7 @@ class Wave {
         for (let i = 0; i < this.totalPoints; i++) {
             const point = new Point(
                 this.index + i,
-                this.pointGap * i,
+                25 + this.pointGap * i,
                 this.centerY - dashboardConfig.wave.data * 3.5,
             );
             this.points[i] = point;
