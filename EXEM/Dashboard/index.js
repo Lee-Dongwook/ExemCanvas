@@ -5,11 +5,11 @@ const dashboardCanvasHeight = dashboardCanvas.height;
 
 const dashboardConfig = {
     center: {
-        x: 250,
-        y: 250,
+        x: 300,
+        y: 300,
     },
     outerCircle: {
-        radius: 200,
+        radius: 250,
         angleStart: 0,
         angleEnd: 2 * Math.PI,
         lineWidth: 50,
@@ -17,10 +17,10 @@ const dashboardConfig = {
     },
 
     innerCircle: {
-        radius: 200,
+        radius: 250,
         angleStart: 0,
         angleEnd: 2 * Math.PI,
-        lineWidth: 10,
+        lineWidth: 20,
         fillStyle: '#000'
     },
     wave: {
@@ -88,7 +88,7 @@ class Wave {
         for (let i = 0; i < this.totalPoints; i++) {
             const point = new Point(
                 this.index + i,
-                25 + this.pointGap * i,
+                90 + (this.pointGap * i * 0.75),
                 this.centerY - dashboardConfig.wave.data * 3.5,
             );
             this.points[i] = point;
@@ -118,8 +118,7 @@ class Wave {
             prevY = this.points[i].y;
         }
 
-        ctx.arcTo(this.stageWidth / 2, this.stageHeight, this.points[0].x, this.points[0].y, 0);
-        // ctx.quadraticCurveTo(this.stageWidth / 2, dashboardConfig.center.y + dashboardConfig.outerCircle.radius, this.points[this.totalPoints - 1].x , this.points[this.totalPoints - 1].y);
+        ctx.arcTo(this.stageWidth / 2, this.stageHeight - dashboardConfig.wave.data, this.points[0].x, this.points[0].y, 0);
         ctx.fill();
         ctx.closePath();
     }
@@ -185,12 +184,9 @@ class App {
 
     animate(time) {
         this.ctx.clearRect(0, 0, this.stageWidth, this.stageHeight);
-
-        buildDashboardOuterCircle(dashboardConfig);
         buildDashboardInnerCircle(dashboardConfig);
-
         this.waveGroup.draw(this.ctx);
-
+        buildDashboardOuterCircle(dashboardConfig);
         requestAnimationFrame(this.animate.bind(this));
     }
 }
