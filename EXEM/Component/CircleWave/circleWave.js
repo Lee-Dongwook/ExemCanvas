@@ -41,7 +41,7 @@ const circleWaveConfig = {
   arc 메서드를 사용하여 중심좌표, 반지름, 시작/끝 각도, 시계방향 여부를 설정하여 원을 그립니다.
   lineWidth로 선의 두께를, fillStyle로 채우기 색상을 설정합니다.
 */
-const buildDashboardInnerCircle = (config) => {
+const buildInnerCircle = (config) => {
     const {center, innerCircle} = config;
 
     circleWaveCanvasContext.beginPath();
@@ -57,7 +57,7 @@ const buildDashboardInnerCircle = (config) => {
  arc 메서드를 사용하여 중심좌표, 반지름, 시작/끝 각도, 시계방향 여부를 설정하여 원을 그립니다.
  lineWidth로 선의 두께를, strokeStyle로 선의 색상을 설정합니다.
 */
-const buildDashboardOuterCircle = (config) => {
+const buildOuterCircle = (config) => {
     const {center, outerCircle} = config;
 
     circleWaveCanvasContext.beginPath();
@@ -215,9 +215,9 @@ class App {
 
     animate(time) {
         this.ctx.clearRect(0, 0, this.stageWidth, this.stageHeight);
-        buildDashboardInnerCircle(circleWaveConfig);
+        buildInnerCircle(circleWaveConfig);
         this.waveGroup.draw(this.ctx);
-        buildDashboardOuterCircle(circleWaveConfig);
+        buildOuterCircle(circleWaveConfig);
         requestAnimationFrame(this.animate.bind(this));
     }
 }
