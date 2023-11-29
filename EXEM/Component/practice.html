@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Circle Rotate</title>     
+    </head>
+    <body>
+        <canvas id="circleRotate" width="600px" height="1200px"></canvas>
+        <script>
+            const circleRotateCanvas = document.getElementById('circleRotate');
+            const circleRotateCanvasContext = circleRotateCanvas.getContext('2d');
+            const circleRotateCanvasWidth = circleRotateCanvas.width;
+            const circleRotateCanvasHeight = circleRotateCanvas.height;
+
+            let offset = 0;
+
+            function draw() {
+                circleRotateCanvasContext.clearRect(0, 0, circleRotateCanvasWidth, circleRotateCanvasHeight);
+                circleRotateCanvasContext.setLineDash([10,30]);
+                circleRotateCanvasContext.lineDashOffset = -offset;
+                circleRotateCanvasContext.beginPath();
+                circleRotateCanvasContext.arc(150,150,50,0,2 * Math.PI);
+                circleRotateCanvasContext.stroke();
+            }
+
+            function march(){
+                offset++;
+                draw();
+                setTimeout(march,20);
+            }
+
+            march();
+        </script>
+    </body>
+</html>
