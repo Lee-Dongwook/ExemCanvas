@@ -68,20 +68,23 @@ const buildDashboardOuterCircle = (config) => {
 }
 
 /* 
-  
+    파형을 구현하는 부분은 Point, Wave, WaveGroup 3개의 Class로 구현하였습니다.
+    1. Point : 파형의 한 점을 나타내는 클래스입니다.
+    2. Wave : 여러 개의 Point객체를 사용하여 파형을 구현합니다.
+    3. WaveGroup : 여러 개의 Wave 객체를 사용하여 중첩된 파형을 구현합니다.
 */
 class Point {
     constructor(index, x, y) {
         this.x = x;
         this.y = y;
         this.fixedY = y;
-        this.speed = 0.05;
+        this.speed = 0.05; //파형의 속도를 조절하는 부분입니다.
         this.cur = index;
     }
 
     update() {
         this.cur += this.speed;
-        this.y = this.fixedY + Math.sin(this.cur) * 45;
+        this.y = this.fixedY + Math.sin(this.cur) * 45; //파형의 진폭을 조절하는 부분입니다.
     }
 }
 
@@ -110,8 +113,8 @@ class Wave {
         for (let i = 0; i < this.totalPoints; i++) {
             const point = new Point(
                 this.index + i,
-                90 + (this.pointGap * i * 0.75),
-                this.centerY - circleWaveConfig.wave.data * 4,
+                90 + (this.pointGap * i * 0.75), // Canvas 내에서 Point 객체의 첫 시작 위치와 Point 객체 간 간격을 조절하는 부분입니다.
+                this.centerY - circleWaveConfig.wave.data * 4, //게이지 수치에 따른 파형의 높이 변화 정도를 조절하는 부분입니다.
             );
             this.points[i] = point;
         }
@@ -140,6 +143,9 @@ class Wave {
             prevY = this.points[i].y;
         }
 
+        /* 
+            파형의 아랫 부분을 렌더링하는 로직입니다.
+        */
         ctx.lineTo(prevX, prevY);
         ctx.lineTo(this.points[this.totalPoints -1].x, this.stageHeight - 150);
         ctx.arcTo(this.stageWidth / 2 + 20, this.stageHeight - circleWaveConfig.wave.data, this.points[0].x, this.points[0].y, 0);
