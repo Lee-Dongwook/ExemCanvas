@@ -30,9 +30,7 @@ const rectWaveConfig = {
    }
 }
 
-// Kafka Rectangle
-
-const buildKafkaInnerRect = (config) => {
+const buildInnerRect = (config) => {
     const { center, innerRect } = config;
 
     rectWaveCanvasContext.fillStyle = innerRect.fillStyle;
@@ -44,7 +42,7 @@ const buildKafkaInnerRect = (config) => {
     );
 }
 
-const buildKafkaOuterRect = (config) => {
+const buildOuterRect = (config) => {
     const { center, outerRect } = config;
 
     rectWaveCanvasContext.beginPath();
@@ -67,13 +65,13 @@ class Point {
         this.x = x;
         this.y = y;
         this.fixedY = y;
-        this.speed = 0.05;
+        this.speed = 0.02 * (rectWaveConfig.wave.data / 10);
         this.cur = index; 
     }
 
     update() {
         this.cur += this.speed;
-        this.y = this.fixedY + Math.sin(this.cur) * 20;
+        this.y = this.fixedY + Math.sin(this.cur) * 45;
     }
 }
 
@@ -100,7 +98,7 @@ class Wave {
             const point = new Point(
                 this.index + i,
                 this.pointGap * i,
-                this.centerY - rectWaveConfig.wave.data * 2.5,
+                this.centerY - rectWaveConfig.wave.data * 4.5,
             );
             this.points[i] = point;
         }
@@ -192,17 +190,14 @@ class App {
         this.canvas.width = this.stageWidth;
         this.canvas.height = this.stageHeight;
 
-        this.waveGroup.resize(this.stageWidth - rectWaveConfig.innerRect.radius / 2, this.stageHeight);
+        this.waveGroup.resize(this.stageWidth, this.stageHeight);
     }
 
     animate(time) {
         this.ctx.clearRect(0, 0, this.stageWidth, this.stageHeight);
-
-        buildKafkaOuterRect(rectWaveConfig);
-        buildKafkaInnerRect(rectWaveConfig);
-
+        buildInnerRect(rectWaveConfig);
         this.waveGroup.draw(this.ctx);
-
+        buildOuterRect(rectWaveConfig);
         requestAnimationFrame(this.animate.bind(this));
     }
 }

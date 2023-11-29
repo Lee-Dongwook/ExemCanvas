@@ -31,7 +31,7 @@ const circleWaveConfig = {
         fillStyle: '#000'
     },
     wave: {
-       data: 70,
+       data: 20,
     }
 };
 
@@ -78,7 +78,7 @@ class Point {
         this.x = x;
         this.y = y;
         this.fixedY = y;
-        this.speed = 0.05; //파형의 속도를 조절하는 부분입니다.
+        this.speed = 0.02 * (circleWaveConfig.wave.data / 10); //파형의 속도를 조절하는 부분입니다.
         this.cur = index;
     }
 
@@ -101,7 +101,7 @@ class Wave {
         this.stageHeight = stageHeight;
 
         this.centerX = stageWidth / 2;
-        this.centerY = circleWaveConfig.center.y + circleWaveConfig.outerCircle.radius;
+        this.centerY = (stageHeight - (circleWaveConfig.center.y - circleWaveConfig.innerCircle.radius)); // 파형이 렌더링 되는 중심 y좌표입니다. 
 
         this.pointGap = (this.stageWidth) / (this.totalPoints - 1);
 
@@ -114,7 +114,7 @@ class Wave {
             const point = new Point(
                 this.index + i,
                 90 + (this.pointGap * i * 0.75), // Canvas 내에서 Point 객체의 첫 시작 위치와 Point 객체 간 간격을 조절하는 부분입니다.
-                this.centerY - circleWaveConfig.wave.data * 4, //게이지 수치에 따른 파형의 높이 변화 정도를 조절하는 부분입니다.
+                this.centerY - circleWaveConfig.wave.data * 3.5, //게이지 수치에 따른 파형의 높이 변화 정도를 조절하는 부분입니다.
             );
             this.points[i] = point;
         }
@@ -148,7 +148,7 @@ class Wave {
         */
         ctx.lineTo(prevX, prevY);
         ctx.lineTo(this.points[this.totalPoints -1].x, this.stageHeight - 150);
-        ctx.arcTo(this.stageWidth / 2 + 20, this.stageHeight - circleWaveConfig.wave.data, this.points[0].x, this.points[0].y, 0);
+        ctx.arcTo(this.stageWidth / 2 + 20, this.stageHeight - (circleWaveConfig.center.y - circleWaveConfig.innerCircle.radius), this.points[0].x, this.points[0].y, 0);
         ctx.lineTo((this.points[0].x + this.points[1].x) / 3, this.stageHeight - 150);
         ctx.fill();
         ctx.closePath();
