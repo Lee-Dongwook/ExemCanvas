@@ -1,53 +1,116 @@
-var map = document.getElementById("circlePartialRotate");
-var context = map.getContext("2d");
+const circlePartialRotateCanvas = document.getElementById(
+  "circlePartialRotate"
+);
+const circlePartialRotateCanvasContext =
+  circlePartialRotateCanvas.getContext("2d");
+const circlePartialRotateCanvasWidth = circlePartialRotateCanvas.width;
+const circlePartialRotateCanvasHeight = circlePartialRotateCanvas.height;
 
-map_Obj = {
-  size: 400,
-  left: '50%',
-  bgColor: 'white'
-}
-canvasLine = {
-  start: 0,
-  end: 400,
-  width: 1,
-  color: "#2E7D32"
-}
+const circlePartialRotateConfig = {
+  center: {
+    x: 300,
+    y: 300,
+  },
 
-map.width = map_Obj.size;
-map.height = map_Obj.size;
-map.style.width = map_Obj.size + 'px';
-map.style.height = map_Obj.size + 'px';
-map.style.left = map_Obj.left;
+  outerCircle: {
+    radius: 180,
+    angleStart: 0,
+    angleEnd: 2 * Math.PI,
+    lineWidth: 20,
+    strokeStyle: "#DDDDDD",
+  },
 
-var x = map_Obj.size / 2;
-var y = map_Obj.size / 2;
-var radius = 100;
-var startAngle = 0.00 * Math.PI;
-var endAngle = 0.02 * Math.PI;
-var counterClockwise = false;
+  middleCircle: {
+    radius: 140,
+    angleStart: 0,
+    angleEnd: 0,
+    firstLineWidth: 50,
+    firstStrokeStyle: "purple",
+    secondLineWidth: 50,
+    secondStrokeStyle: "white",
+  },
 
-var startAngle2 = 0.00;
-var endAngle2 = 0.00;
-var timeStart = 0;
-var timeEnd = 200;
-var timer = setInterval(function() {
-    if (timeStart == timeEnd) {	
-        text.innerHTML = '100%';
-        clearInterval(timer);
-    } else {
-        context.beginPath();
-        context.arc(x, y, radius, startAngle2 * Math.PI, endAngle2 * Math.PI, counterClockwise);
-        context.lineWidth = 15;
-        context.strokeStyle = "purple";
-        context.stroke();
-        timeStart++;
-        endAngle2 =  endAngle2 + 0.01;
-        startAngle2 = startAngle2 + 0.02;
-        timeStart--;
-        context.beginPath();
-        context.arc(x,y,radius, startAngle2 * Math.PI , endAngle2 * Math.PI, counterClockwise);
-        context.lineWidth = 17;
-        context.strokeStyle = "white";
-        context.stroke();
-    }
+  innerCircle: {
+    radius: 110,
+    angleStart: 0,
+    angleEnd: 2 * Math.PI,
+    fillStyle: "#DDDDDD",
+  },
+
+  timer: {
+    startTime: 0,
+    endTime: 200,
+  },
+};
+
+const buildInnerCircle = (config) => {
+  const { center, innerCircle } = config;
+
+  circlePartialRotateCanvasContext.beginPath();
+  circlePartialRotateCanvasContext.arc(
+    center.x,
+    center.y,
+    innerCircle.radius,
+    innerCircle.angleStart,
+    innerCircle.angleEnd,
+    false
+  );
+  circlePartialRotateCanvasContext.fillStyle = innerCircle.fillStyle;
+  circlePartialRotateCanvasContext.fill();
+};
+
+const buildMiddleCircle = (config) => {
+  const { center, middleCircle, timer } = config;
+
+  circlePartialRotateCanvasContext.beginPath();
+  circlePartialRotateCanvasContext.arc(
+    center.x,
+    center.y,
+    middleCircle.radius,
+    middleCircle.angleStart * Math.PI,
+    middleCircle.angleEnd * Math.PI,
+    false
+  );
+  circlePartialRotateCanvasContext.lineWidth = middleCircle.firstLineWidth;
+  circlePartialRotateCanvasContext.strokeStyle = middleCircle.firstStrokeStyle;
+  circlePartialRotateCanvasContext.stroke();
+  timer.startTime++;
+  middleCircle.angleStart += 0.02;
+  middleCircle.angleEnd += 0.01;
+  timer.startTime--;
+  circlePartialRotateCanvasContext.beginPath();
+  circlePartialRotateCanvasContext.arc(
+    center.x,
+    center.y,
+    middleCircle.radius,
+    middleCircle.angleStart * Math.PI,
+    middleCircle.angleEnd * Math.PI,
+    false
+  );
+  circlePartialRotateCanvasContext.lineWidth = middleCircle.secondLineWidth;
+  circlePartialRotateCanvasContext.strokeStyle = middleCircle.secondStrokeStyle;
+  circlePartialRotateCanvasContext.stroke();
+};
+
+const buildOuterCircle = (config) => {
+  const { center, outerCircle } = config;
+
+  circlePartialRotateCanvasContext.beginPath();
+  circlePartialRotateCanvasContext.arc(
+    center.x,
+    center.y,
+    outerCircle.radius,
+    outerCircle.angleStart,
+    outerCircle.angleEnd,
+    false
+  );
+  circlePartialRotateCanvasContext.lineWidth = outerCircle.lineWidth;
+  circlePartialRotateCanvasContext.strokeStyle = outerCircle.strokeStyle;
+  circlePartialRotateCanvasContext.stroke();
+};
+
+const render = setInterval(function () {
+  buildOuterCircle(circlePartialRotateConfig);
+  buildInnerCircle(circlePartialRotateConfig);
+  buildMiddleCircle(circlePartialRotateConfig);
 }, 15);
