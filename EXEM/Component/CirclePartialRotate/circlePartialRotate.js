@@ -109,8 +109,11 @@ const buildOuterCircle = (config) => {
   circlePartialRotateCanvasContext.stroke();
 };
 
-const render = setInterval(function () {
+function render() {
   buildOuterCircle(circlePartialRotateConfig);
   buildInnerCircle(circlePartialRotateConfig);
   buildMiddleCircle(circlePartialRotateConfig);
-}, 15);
+  requestAnimationFrame(render);
+}
+
+requestAnimationFrame(render);
