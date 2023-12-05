@@ -22,11 +22,11 @@ const circlePartialRotateConfig = {
 
   middleCircle: {
     radius: 140,
-    angleStart: 1,
-    angleEnd: 1.5,
+    angleStart: 0.8,
+    angleEnd: 1,
     firstLineWidth: 50,
     firstStrokeStyle: "purple",
-    secondLineWidth: 50,
+    secondLineWidth: 55,
     secondStrokeStyle: "white",
   },
 
@@ -55,7 +55,7 @@ const buildInnerCircle = (config) => {
 };
 
 const buildMiddleCircle = (config) => {
-  const { center, middleCircle, timer } = config;
+  const { center, middleCircle } = config;
 
   circlePartialRotateCanvasContext.beginPath();
   circlePartialRotateCanvasContext.arc(
@@ -70,28 +70,29 @@ const buildMiddleCircle = (config) => {
   circlePartialRotateCanvasContext.strokeStyle = middleCircle.firstStrokeStyle;
   circlePartialRotateCanvasContext.stroke();
 
-  middleCircle.angleStart += 0.02;
-  middleCircle.angleEnd += 0.02;
+  if (middleCircle.angleEnd >= 3) {
+    circlePartialRotateCanvasContext.beginPath();
+    circlePartialRotateCanvasContext.arc(
+      center.x,
+      center.y,
+      middleCircle.radius,
+      middleCircle.angleStart * Math.PI,
+      middleCircle.angleEnd * Math.PI,
+      false
+    );
+    circlePartialRotateCanvasContext.lineWidth = middleCircle.secondLineWidth;
+    circlePartialRotateCanvasContext.strokeStyle =
+      middleCircle.secondStrokeStyle;
+    circlePartialRotateCanvasContext.stroke();
+  }
 
-  circlePartialRotateCanvasContext.beginPath();
-  circlePartialRotateCanvasContext.arc(
-    center.x,
-    center.y,
-    middleCircle.radius,
-    middleCircle.angleStart * Math.PI,
-    middleCircle.angleEnd * Math.PI,
-    false
-  );
+  middleCircle.angleStart += 0.01;
+  middleCircle.angleEnd += 0.01;
 
-  middleCircle.angleStart -= 0.01;
-  middleCircle.angleEnd -= 0.01;
-
-  circlePartialRotateCanvasContext.lineWidth = middleCircle.secondLineWidth;
-  circlePartialRotateCanvasContext.strokeStyle = middleCircle.secondStrokeStyle;
-  circlePartialRotateCanvasContext.stroke();
-
-  console.log(middleCircle.angleStart);
-  console.log(middleCircle.angleEnd);
+  if (middleCircle.angleEnd >= 5) {
+    middleCircle.angleStart = 0.8;
+    middleCircle.angleEnd = 1;
+  }
 };
 
 const buildOuterCircle = (config) => {
