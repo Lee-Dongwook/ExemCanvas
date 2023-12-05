@@ -9,10 +9,10 @@ const circleRotateConfig = {
     y: 300,
   },
   outerCircle: {
-    radius: 240,
+    radius: 270,
     angleStart: 0,
     angleEnd: 2 * Math.PI,
-    lineWidth: 50,
+    lineWidth: 20,
     strokeStyle: "#196df3",
   },
 
@@ -97,10 +97,8 @@ function loop() {
     circleRotateConfig.center.y
   );
   rotate++;
-  circleRotateCanvasContext.setLineDash([1, 100]);
+  circleRotateCanvasContext.setLineDash([1, 120]);
   circleRotateCanvasContext.setTransform(1, 0, 0, 1, 0, 0);
-
-  if (rotate > 359) rotate = 0;
 
   buildMiddleCircle(circleRotateConfig);
   buildInnerCircle(circleRotateConfig);
