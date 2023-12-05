@@ -23,7 +23,7 @@ const circlePartialRotateConfig = {
   middleCircle: {
     radius: 140,
     angleStart: 0,
-    angleEnd: 0,
+    angleEnd: 1,
     firstLineWidth: 50,
     firstStrokeStyle: "purple",
     secondLineWidth: 50,
@@ -76,7 +76,7 @@ const buildMiddleCircle = (config) => {
   circlePartialRotateCanvasContext.stroke();
   timer.startTime++;
   middleCircle.angleStart += 0.02;
-  middleCircle.angleEnd += 0.01;
+  middleCircle.angleEnd += 0.02;
   timer.startTime--;
   circlePartialRotateCanvasContext.beginPath();
   circlePartialRotateCanvasContext.arc(
