@@ -22,8 +22,8 @@ const circlePartialRotateConfig = {
 
   middleCircle: {
     radius: 140,
-    angleStart: 0,
-    angleEnd: 1,
+    angleStart: 1,
+    angleEnd: 1.5,
     firstLineWidth: 50,
     firstStrokeStyle: "purple",
     secondLineWidth: 50,
@@ -35,11 +35,6 @@ const circlePartialRotateConfig = {
     angleStart: 0,
     angleEnd: 2 * Math.PI,
     fillStyle: "#DDDDDD",
-  },
-
-  timer: {
-    startTime: 0,
-    endTime: 200,
   },
 };
 
@@ -74,10 +69,10 @@ const buildMiddleCircle = (config) => {
   circlePartialRotateCanvasContext.lineWidth = middleCircle.firstLineWidth;
   circlePartialRotateCanvasContext.strokeStyle = middleCircle.firstStrokeStyle;
   circlePartialRotateCanvasContext.stroke();
-  timer.startTime++;
+
   middleCircle.angleStart += 0.02;
   middleCircle.angleEnd += 0.02;
-  timer.startTime--;
+
   circlePartialRotateCanvasContext.beginPath();
   circlePartialRotateCanvasContext.arc(
     center.x,
@@ -87,9 +82,16 @@ const buildMiddleCircle = (config) => {
     middleCircle.angleEnd * Math.PI,
     false
   );
+
+  middleCircle.angleStart -= 0.01;
+  middleCircle.angleEnd -= 0.01;
+
   circlePartialRotateCanvasContext.lineWidth = middleCircle.secondLineWidth;
   circlePartialRotateCanvasContext.strokeStyle = middleCircle.secondStrokeStyle;
   circlePartialRotateCanvasContext.stroke();
+
+  console.log(middleCircle.angleStart);
+  console.log(middleCircle.angleEnd);
 };
 
 const buildOuterCircle = (config) => {
