@@ -66,32 +66,36 @@ const buildMiddleCircle = (config) => {
     middleCircle.angleEnd * Math.PI,
     false
   );
+
+  const gradient = circlePartialRotateCanvasContext.createLinearGradient(
+    center.x - middleCircle.radius,
+    center.y,
+    center.x + middleCircle.radius,
+    center.y
+  );
+
+  gradient.addColorStop(0, "white");
+  gradient.addColorStop(1, "purple");
+
+  circlePartialRotateCanvasContext.strokeStyle = gradient;
   circlePartialRotateCanvasContext.lineWidth = middleCircle.firstLineWidth;
-  circlePartialRotateCanvasContext.strokeStyle = middleCircle.firstStrokeStyle;
   circlePartialRotateCanvasContext.stroke();
 
+  middleCircle.angleStart += 0.008;
+  middleCircle.angleEnd += 0.008;
+
   if (middleCircle.angleEnd >= 3) {
-    circlePartialRotateCanvasContext.beginPath();
-    circlePartialRotateCanvasContext.arc(
-      center.x,
-      center.y,
-      middleCircle.radius,
-      middleCircle.angleStart * Math.PI,
-      middleCircle.angleEnd * Math.PI,
-      false
+    circlePartialRotateCanvasContext.clearRect(
+      0,
+      0,
+      circlePartialRotateCanvasWidth,
+      circlePartialRotateCanvasHeight
     );
-    circlePartialRotateCanvasContext.lineWidth = middleCircle.secondLineWidth;
-    circlePartialRotateCanvasContext.strokeStyle =
-      middleCircle.secondStrokeStyle;
-    circlePartialRotateCanvasContext.stroke();
-  }
 
-  middleCircle.angleStart += 0.01;
-  middleCircle.angleEnd += 0.01;
-
-  if (middleCircle.angleEnd >= 5) {
     middleCircle.angleStart = 0.8;
     middleCircle.angleEnd = 1;
+
+    buildMiddleCircle(config);
   }
 };
 
