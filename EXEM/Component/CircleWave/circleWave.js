@@ -19,7 +19,7 @@ const circleWaveConfig = {
     radius: 240,
     angleStart: 0,
     angleEnd: 2 * Math.PI,
-    lineWidth: 60,
+    lineWidth: 65,
     strokeStyle: "#196df3",
   },
 
@@ -31,7 +31,7 @@ const circleWaveConfig = {
     fillStyle: "#000",
   },
   wave: {
-    data: 20,
+    data: 100,
   },
 };
 
