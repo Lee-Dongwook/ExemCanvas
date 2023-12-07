@@ -22,11 +22,11 @@ const circlePartialRotateConfig = {
 
   middleCircle: {
     radius: 140,
-    angleStart: 0.8,
-    angleEnd: 1,
+    angleStart: 0.85,
+    angleEnd: 2,
     firstLineWidth: 50,
     firstStrokeStyle: "purple",
-    secondLineWidth: 55,
+    secondLineWidth: 100,
     secondStrokeStyle: "white",
   },
 
@@ -74,29 +74,20 @@ const buildMiddleCircle = (config) => {
     center.y
   );
 
-  gradient.addColorStop(0, "white");
-  gradient.addColorStop(1, "purple");
+  gradient.addColorStop(0, "rgba(128, 0, 128, 1)");
+  gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
 
   circlePartialRotateCanvasContext.strokeStyle = gradient;
   circlePartialRotateCanvasContext.lineWidth = middleCircle.firstLineWidth;
   circlePartialRotateCanvasContext.stroke();
 
-  middleCircle.angleStart += 0.008;
-  middleCircle.angleEnd += 0.008;
+  middleCircle.angleStart += 0.01;
+  middleCircle.angleEnd += 0.01;
 
-  if (middleCircle.angleEnd >= 3) {
-    circlePartialRotateCanvasContext.clearRect(
-      0,
-      0,
-      circlePartialRotateCanvasWidth,
-      circlePartialRotateCanvasHeight
-    );
-
-    middleCircle.angleStart = 0.8;
-    middleCircle.angleEnd = 1;
-
-    buildMiddleCircle(config);
-  }
+  circlePartialRotateCanvasContext.globalCompositeOperation = "destination-in";
+  circlePartialRotateCanvasContext.lineWidth = middleCircle.secondLineWidth;
+  circlePartialRotateCanvasContext.stroke();
+  circlePartialRotateCanvasContext.globalCompositeOperation = "source-over";
 };
 
 const buildOuterCircle = (config) => {
@@ -117,9 +108,9 @@ const buildOuterCircle = (config) => {
 };
 
 function render() {
+  buildMiddleCircle(circlePartialRotateConfig);
   buildOuterCircle(circlePartialRotateConfig);
   buildInnerCircle(circlePartialRotateConfig);
-  buildMiddleCircle(circlePartialRotateConfig);
   requestAnimationFrame(render);
 }
 
