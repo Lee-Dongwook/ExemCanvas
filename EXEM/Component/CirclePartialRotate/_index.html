@@ -1,10 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Circle Partial Rotate</title>
+    <style>
+      .circle-wrapper {
+        position: relative;
+        display: block;
+        margin-top: -17%;
+        margin-left: 7%;
+        height: 250px;
+        width: 250px;
+        background: #f7f9fc;
+        border-radius: 50%;
+      }
+
+      .circle-wrapper__circle {
+        width: 100%;
+        height: 100%;
+        animation: rotate 3.33s linear infinite;
+      }
+
+      .circle-wrapper__circle:after,
+      .circle-wrapper__circle:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+        height: 50%;
+      }
+
+      .circle-wrapper__circle:before {
+        border-radius: 200px 200px 0 0;
+        background-image: linear-gradient(
+          to right,
+          rgba(92, 167, 255, 0.5),
+          #5ca7ff
+        );
+      }
+
+      .circle-wrapper__circle:after {
+        top: 50%;
+        border-radius: 0 0 200px 200px;
+        background-image: linear-gradient(
+          to right,
+          rgba(92, 167, 255, 0.5),
+          transparent
+        );
+      }
+
+      .circle-wrapper__content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+        height: 70%;
+        width: 70%;
+        background: #fff;
+        border-radius: 50%;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
   <body>
-    <canvas id="circlePartialRotate" width="600px" height="1200px"></canvas>
+    <canvas id="circlePartialRotate" width="600px" height="600px"></canvas>
+    <div class="circle-wrapper">
+      <div class="circle-wrapper__circle"></div>
+      <div class="circle-wrapper__content"></div>
+    </div>
     <script type="text/javascript" src="circlePartialRotate.js"></script>
   </body>
 </html>

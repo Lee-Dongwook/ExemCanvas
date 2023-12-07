@@ -75,7 +75,7 @@ const buildMiddleCircle = (config) => {
   );
 
   gradient.addColorStop(0, "rgba(128, 0, 128, 1)");
-  gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+  gradient.addColorStop(1, "transparent");
 
   circlePartialRotateCanvasContext.strokeStyle = gradient;
   circlePartialRotateCanvasContext.lineWidth = middleCircle.firstLineWidth;
