@@ -8,8 +8,8 @@ const circlePartialRotateCanvasHeight = circlePartialRotateCanvas.height;
 
 const circlePartialRotateConfig = {
   center: {
-    x: 300,
-    y: 300,
+    x: 280,
+    y: 350,
   },
 
   outerCircle: {
