@@ -12,12 +12,12 @@ const circleWaveCanvasHeight = circleWaveCanvas.height;
 */
 const circleWaveConfig = {
   center: {
-    x: 300,
-    y: 300,
+    x: circleWaveCanvasWidth / 2,
+    y: circleWaveCanvasHeight / 4,
   },
 
   rotateCircle: {
-    radius: 280,
+    radius: (circleWaveCanvasWidth / 600) * 280,
     angleStart: 0,
     angleEnd: 2 * Math.PI,
     lineWidth: 15,
@@ -25,7 +25,7 @@ const circleWaveConfig = {
   },
 
   outerCircle: {
-    radius: 225,
+    radius: (circleWaveCanvasWidth / 600) * 225,
     angleStart: 0,
     angleEnd: 2 * Math.PI,
     lineWidth: 50,
@@ -33,7 +33,7 @@ const circleWaveConfig = {
   },
 
   innerCircle: {
-    radius: 220,
+    radius: (circleWaveCanvasWidth / 600) * 220,
     angleStart: 0,
     angleEnd: 2 * Math.PI,
     lineWidth: 20,
@@ -41,6 +41,9 @@ const circleWaveConfig = {
   },
   wave: {
     data: 30,
+    color: ["rgba(0,199,235,0.4)", "rgba(0,146,199,0.4)", "rgba(0,87,158,0.4)"],
+    totalWaves: 3,
+    totalPoints: 6,
   },
 };
 
@@ -138,8 +141,8 @@ class Wave {
     for (let i = 0; i < this.totalPoints; i++) {
       const point = new Point(
         this.index + i,
-        90 + this.pointGap * i * 0.7, // Canvas 내에서 Point 객체의 첫 시작 위치와 Point 객체 간 간격을 조절하는 부분입니다.
-        this.centerY - circleWaveConfig.wave.data * 3.2 //게이지 수치에 따른 파형의 높이 변화 정도를 조절하는 부분입니다.
+        (circleWaveCanvasWidth / 600) * 90 + this.pointGap * i * 0.7, // Can6vas 내에서 Point 객체의 첫 시작 위치와 Point 객체 간 간격을 조절하는 부분입니다.
+        this.centerY - circleWaveConfig.wave.data * 3 //게이지 수치에 따른 파형의 높이 변화 정도를 조절하는 부분입니다.
       );
       this.points[i] = point;
     }
@@ -172,7 +175,10 @@ class Wave {
             파형의 아랫 부분을 렌더링하는 로직입니다.
         */
     ctx.lineTo(prevX, prevY);
-    ctx.lineTo(this.points[this.totalPoints - 1].x, this.stageHeight - 175);
+    // ctx.lineTo(
+    //   this.points[this.totalPoints - 1].x,
+    //   this.stageHeight - (circleRotateCanvasHeight / 1200) * 175
+    // );
     ctx.arcTo(
       this.stageWidth / 2,
       this.stageHeight -
@@ -181,7 +187,10 @@ class Wave {
       this.points[0].y,
       0
     );
-    ctx.lineTo(this.points[0].x, this.stageHeight - 175);
+    // ctx.lineTo(
+    //   this.points[0].x,
+    //   this.stageHeight - (circleRotateCanvasHeight / 1200) * 175
+    // );
     ctx.fill();
     ctx.closePath();
   }
@@ -189,14 +198,10 @@ class Wave {
 
 class WaveGroup {
   constructor() {
-    this.totalWaves = 3;
-    this.totalPoints = 6;
+    this.totalWaves = circleWaveConfig.wave.totalWaves;
+    this.totalPoints = circleWaveConfig.wave.totalPoints;
 
-    this.color = [
-      "rgba(0,199,235,0.4)",
-      "rgba(0,146,199,0.4)",
-      "rgba(0,87,158,0.4)",
-    ];
+    this.color = circleWaveConfig.wave.color;
 
     this.waves = [];
 
