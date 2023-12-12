@@ -1,9 +1,9 @@
-const rectWaveCanvas = document.getElementById("rectWave");
-const rectWaveCanvasContext = rectWaveCanvas.getContext("2d");
+const rectReactiveCanvas = document.getElementById("rectReactive");
+const rectReactiveCanvasContext = rectReactiveCanvas.getContext("2d");
 const minWidth = 300;
 const minHeight = 300;
 
-const rectWaveConfig = {
+const rectReactiveConfig = {
   innerRect: {
     fillStyle: "#000",
   },
@@ -25,8 +25,8 @@ const rectWaveConfig = {
 const buildInnerRect = (canvasWidth, canvasHeight, config) => {
   const { innerRect } = config;
 
-  rectWaveCanvasContext.fillStyle = innerRect.fillStyle;
-  rectWaveCanvasContext.fillRect(
+  rectReactiveCanvasContext.fillStyle = innerRect.fillStyle;
+  rectReactiveCanvasContext.fillRect(
     canvasWidth * 0.2,
     canvasHeight * 0.2,
     canvasWidth * 0.6,
@@ -37,34 +37,34 @@ const buildInnerRect = (canvasWidth, canvasHeight, config) => {
 const buildOuterRect = (canvasWidth, canvasHeight, config) => {
   const { outerRect } = config;
 
-  rectWaveCanvasContext.beginPath();
-  rectWaveCanvasContext.lineWidth = outerRect.lineWidth;
-  rectWaveCanvasContext.lineJoin = outerRect.lineJoin;
-  rectWaveCanvasContext.strokeStyle = outerRect.strokeStyle;
-  rectWaveCanvasContext.strokeRect(
+  rectReactiveCanvasContext.beginPath();
+  rectReactiveCanvasContext.lineWidth = outerRect.lineWidth;
+  rectReactiveCanvasContext.lineJoin = outerRect.lineJoin;
+  rectReactiveCanvasContext.strokeStyle = outerRect.strokeStyle;
+  rectReactiveCanvasContext.strokeRect(
     canvasWidth * 0.2,
     canvasHeight * 0.2,
     canvasWidth * 0.6,
     canvasHeight * 0.6
   );
-  rectWaveCanvasContext.stroke();
+  rectReactiveCanvasContext.stroke();
 };
 
 const animate = (canvas, width, height, config) => {
   canvas.width = Math.max(width, minWidth);
   canvas.height = Math.max(height, minHeight);
-  buildInnerRect(rectWaveCanvas.width, rectWaveCanvas.height, config);
-  buildOuterRect(rectWaveCanvas.width, rectWaveCanvas.height, config);
+  buildInnerRect(rectReactiveCanvas.width, rectReactiveCanvas.height, config);
+  buildOuterRect(rectReactiveCanvas.width, rectReactiveCanvas.height, config);
 };
 
 const init = () => {
   const initialCanvasWidth = window.innerWidth;
   const initialCanvasHeight = window.innerHeight;
   animate(
-    rectWaveCanvas,
+    rectReactiveCanvas,
     initialCanvasWidth,
     initialCanvasHeight,
-    rectWaveConfig
+    rectReactiveConfig
   );
 };
 
@@ -73,5 +73,10 @@ init();
 window.addEventListener("resize", () => {
   const newCanvasWidth = window.innerWidth;
   const newCanvasHeight = window.innerHeight;
-  animate(rectWaveCanvas, newCanvasWidth, newCanvasHeight, rectWaveConfig);
+  animate(
+    rectReactiveCanvas,
+    newCanvasWidth,
+    newCanvasHeight,
+    rectReactiveConfig
+  );
 });
