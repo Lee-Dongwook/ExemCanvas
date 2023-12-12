@@ -1,11 +1,18 @@
 const circleReactiveCanvas = document.getElementById("circleReactive");
 const circleReactiveCanvasContext = circleReactiveCanvas.getContext("2d");
+const circleRotateReactiveCanvas = document.getElementById(
+  "circleRotateReactive"
+);
+const circleRotateReactiveCanvasContext =
+  circleRotateReactiveCanvas.getContext("2d");
+
 const minWidth = 300;
 const minHeight = 300;
 
+let rotate = 0;
+
 const circleReactiveConfig = {
   rotateCircle: {
-    radius: 280,
     angleStart: 0,
     angleEnd: 2 * Math.PI,
     lineWidth: 15,
@@ -52,52 +59,36 @@ const buildOuterCircle = (canvasWidth, canvasHeight, config) => {
   circleReactiveCanvasContext.stroke();
 };
 
-const circleRotateCanvas = document.getElementById("circleRotateReactive");
-const circleRotateCanvasContext = circleRotateCanvas.getContext("2d");
-const circleRotateCanvasWidth = circleRotateCanvas.width;
-const circleRotateCanvasHeight = circleRotateCanvas.height;
+const buildRotateOuterCircle = (
+  canvasWidth,
+  canvasHeight,
+  rotateAngle,
+  config
+) => {
+  const { rotateCircle } = config;
 
-const buildRotateOuterCircle = (config, rotateAngle) => {
-  const { center, rotateCircle } = config;
-
-  circleRotateCanvasContext.beginPath();
-  circleRotateCanvasContext.arc(
-    center.x,
-    center.y,
-    rotateCircle.radius,
+  circleRotateReactiveCanvasContext.beginPath();
+  circleRotateReactiveCanvasContext.arc(
+    canvasWidth / 2,
+    canvasHeight / 2,
+    canvasWidth * 0.3,
     rotateCircle.angleStart + rotateAngle,
     rotateCircle.angleEnd + rotateAngle,
     false
   );
-  circleRotateCanvasContext.lineWidth = rotateCircle.lineWidth;
-  circleRotateCanvasContext.strokeStyle = rotateCircle.strokeStyle;
-  circleRotateCanvasContext.stroke();
+
+  circleRotateReactiveCanvasContext.lineWidth = rotateCircle.lineWidth;
+  circleRotateReactiveCanvasContext.strokeStyle = rotateCircle.strokeStyle;
+  circleRotateReactiveCanvasContext.stroke();
 };
 
-let rotate = 0;
-function loop() {
-  circleRotateCanvasContext.clearRect(
-    0,
-    0,
-    circleRotateCanvasWidth,
-    circleRotateCanvasHeight
-  );
-  circleRotateCanvasContext.translate(
-    circleReactiveConfig.center.x,
-    circleReactiveConfig.center.y
-  );
-  rotate++;
-  circleRotateCanvasContext.setLineDash([1, 135]);
-  circleRotateCanvasContext.setTransform(1, 0, 0, 1, 0, 0);
-
-  buildRotateOuterCircle(circleReactiveConfig, (rotate * Math.PI) / 180);
-
-  requestAnimationFrame(loop);
-}
-
-const animate = (canvas, width, height, config) => {
+const animate = (canvas, rotateCanvas, width, height, config, rotateAngle) => {
   canvas.width = Math.max(width, minWidth);
   canvas.height = Math.max(height, minHeight);
+
+  rotateCanvas.width = Math.max(width, minWidth);
+  rotateCanvas.height = Math.max(height, minHeight);
+
   buildInnerCircle(
     circleReactiveCanvas.width,
     circleReactiveCanvas.height,
@@ -108,6 +99,25 @@ const animate = (canvas, width, height, config) => {
     circleReactiveCanvas.height,
     config
   );
+
+  circleRotateReactiveCanvasContext.clearRect(
+    0,
+    0,
+    circleRotateReactiveCanvas.width,
+    circleRotateReactiveCanvas.height
+  );
+  rotate++;
+  circleRotateReactiveCanvasContext.setLineDash([
+    1,
+    (circleRotateReactiveCanvas.width / 560) * 81,
+  ]);
+  circleRotateReactiveCanvasContext.setTransform(1, 0, 0, 1, 0, 0);
+  buildRotateOuterCircle(
+    circleRotateReactiveCanvas.width,
+    circleRotateReactiveCanvas.height,
+    rotateAngle,
+    config
+  );
 };
 
 const init = () => {
@@ -115,9 +125,11 @@ const init = () => {
   const initialCanvasHeight = window.innerHeight;
   animate(
     circleReactiveCanvas,
+    circleRotateReactiveCanvas,
     initialCanvasWidth,
     initialCanvasHeight,
-    circleReactiveConfig
+    circleReactiveConfig,
+    0
   );
 };
 
@@ -128,8 +140,10 @@ window.addEventListener("resize", () => {
   const newCanvasHeight = window.innerHeight;
   animate(
     circleReactiveCanvas,
+    circleRotateReactiveCanvas,
     newCanvasWidth,
     newCanvasHeight,
-    circleReactiveConfig
+    circleReactiveConfig,
+    (rotate * Math.PI) / 180
   );
 });
