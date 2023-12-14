@@ -4,6 +4,16 @@ const circleWaveCanvasContext = circleWaveCanvas.getContext("2d");
 const circleWaveCanvasWidth = circleWaveCanvas.width;
 const circleWaveCanvasHeight = circleWaveCanvas.height;
 
+const circleRotateCanvas = document.getElementById("circleRotate");
+const circleRotateCanvasContext = circleRotateCanvas.getContext("2d");
+const circleRotateCanvasWidth = circleRotateCanvas.width;
+const circleRotateCanvasHeight = circleRotateCanvas.height;
+
+const minWidth = 400;
+const maxWidth = 800;
+
+let rotate = 0;
+
 /* circleWave 캔버스에 그려질 원과 파형의 그래픽을 구성합니다. 
    1. center : 원과 웨이브가 그려질 중심점의 x,y 좌표를 설정합니다.
    2. outerCircle: 외부 원에 대한 반지름(radius), 시작각도(angleStart), 끝 각도(angleEnd), 선의 두께(lineWidth), 선의 색상(strokeStyle)을 설정합니다.
@@ -17,15 +27,12 @@ const circleWaveConfig = {
   },
 
   rotateCircle: {
-    radius: (circleWaveCanvasWidth / 600) * 280,
-    angleStart: 0,
-    angleEnd: 2 * Math.PI,
     lineWidth: 15,
     strokeStyle: "skyblue",
   },
 
   outerCircle: {
-    lineWidth: 50,
+    lineWidth: 80,
     strokeStyle: "skyblue",
   },
 
@@ -54,7 +61,7 @@ const buildInnerCircle = (canvasWidth, canvasHeight, config) => {
   circleWaveCanvasContext.arc(
     canvasWidth / 2,
     canvasHeight / 2,
-    canvasWidth * 0.25,
+    canvasWidth * 0.3,
     0,
     2 * Math.PI,
     false
@@ -77,7 +84,7 @@ const buildOuterCircle = (canvasWidth, canvasHeight, config) => {
   circleWaveCanvasContext.arc(
     canvasWidth / 2,
     canvasHeight / 2,
-    canvasWidth * 0.25,
+    canvasWidth * 0.3,
     0,
     2 * Math.PI,
     false
@@ -85,6 +92,37 @@ const buildOuterCircle = (canvasWidth, canvasHeight, config) => {
   circleWaveCanvasContext.lineWidth = outerCircle.lineWidth;
   circleWaveCanvasContext.strokeStyle = outerCircle.strokeStyle;
   circleWaveCanvasContext.stroke();
+};
+
+const buildRotateOuterCircle = (
+  canvasWidth,
+  canvasHeight,
+  config,
+  rotateAngle
+) => {
+  const { rotateCircle } = config;
+
+  circleRotateCanvasContext.clearRect(0, 0, canvasWidth, canvasHeight);
+
+  circleRotateCanvasContext.beginPath();
+  circleRotateCanvasContext.arc(
+    canvasWidth / 2,
+    canvasHeight / 2,
+    canvasWidth * 0.4,
+    0 + rotateAngle,
+    2 * Math.PI + rotateAngle,
+    false
+  );
+  circleRotateCanvasContext.lineWidth = rotateCircle.lineWidth;
+  circleRotateCanvasContext.strokeStyle = rotateCircle.strokeStyle;
+  circleRotateCanvasContext.stroke();
+  circleRotateCanvasContext.setLineDash([1, 100]);
+  circleRotateCanvasContext.setTransform(1, 0, 0, 1, 0, 0);
+
+  requestAnimationFrame(() => {
+    rotateAngle += (1 * Math.PI) / 180;
+    buildRotateOuterCircle(canvasWidth, canvasHeight, config, rotateAngle);
+  });
 };
 
 /* 
@@ -121,7 +159,7 @@ class Wave {
     this.stageHeight = stageHeight;
 
     this.centerX = stageWidth / 2;
-    this.centerY = stageHeight - circleWaveCanvasHeight / 4; // 파형이 렌더링 되는 중심 y좌표입니다.
+    this.centerY = stageHeight / 2 + stageWidth * 0.25; // 파형이 렌더링 되는 중심 y좌표입니다.
     this.pointGap = this.stageWidth / (this.totalPoints - 1);
 
     this.init();
@@ -132,7 +170,7 @@ class Wave {
     for (let i = 0; i < this.totalPoints; i++) {
       const point = new Point(
         this.index + i,
-        circleWaveCanvasWidth / 2 + this.pointGap * i * 0.5, // Can6vas 내에서 Point 객체의 첫 시작 위치와 Point 객체 간 간격을 조절하는 부분입니다.
+        this.stageWidth * 0.2 + this.pointGap * i * 0.6, // Can6vas 내에서 Point 객체의 첫 시작 위치와 Point 객체 간 간격을 조절하는 부분입니다.
         this.centerY - circleWaveConfig.wave.data * 3 //게이지 수치에 따른 파형의 높이 변화 정도를 조절하는 부분입니다.
       );
       this.points[i] = point;
@@ -166,15 +204,11 @@ class Wave {
       파형의 아랫 부분을 렌더링하는 로직입니다.
     */
     ctx.lineTo(prevX, prevY);
-    // ctx.lineTo(this.points[this.totalPoints - 1].x, this.stageHeight);
-    // ctx.arcTo(
-    //   this.stageWidth / 2,
-    //   this.stageHeight,
-    //   this.points[0].x,
-    //   this.points[0].y,
-    //   0
-    // );
-    // ctx.lineTo(this.points[0].x, this.stageHeight);
+    ctx.lineTo(
+      this.points[this.totalPoints - 2].x,
+      this.stageHeight / 2 + this.stageWidth * 0.25
+    );
+    ctx.lineTo(this.points[1].x, this.stageHeight / 2 + this.stageWidth * 0.25);
     ctx.fill();
     ctx.closePath();
   }
@@ -212,12 +246,18 @@ class WaveGroup {
 
 class App {
   constructor() {
-    this.canvas = circleWaveCanvas;
-    this.ctx = this.canvas.getContext("2d");
-    this.stageWidth = circleWaveCanvas.width;
-    this.stageHeight = circleWaveCanvas.height / 2;
+    this.circleWaveCanvas = document.getElementById("circleWave");
+    this.circleWaveCtx = this.circleWaveCanvas.getContext("2d");
+    this.circleWaveWidth = this.circleWaveCanvas.width;
+    this.circleWaveHeight = this.circleWaveCanvas.height;
 
-    document.body.appendChild(this.canvas);
+    this.circleRotateCanvas = document.getElementById("circleRotate");
+    this.circleRotateCtx = this.circleRotateCanvas.getContext("2d");
+    this.circleRotateWidth = this.circleRotateCanvas.width;
+    this.circleRotateHeight = this.circleRotateCanvas.height;
+
+    document.body.appendChild(this.circleWaveCanvas);
+    document.body.appendChild(this.circleRotateCanvas);
 
     this.waveGroup = new WaveGroup();
 
@@ -228,19 +268,59 @@ class App {
   }
 
   resize() {
-    this.stageWidth = window.innerWidth;
-    this.stageHeight = window.innerHeight;
-    this.canvas.width = this.stageWidth;
-    this.canvas.height = this.stageHeight;
+    const maxWidth = 800;
+    const minWidth = 400;
 
-    this.waveGroup.resize(this.stageWidth, this.stageHeight);
+    this.circleWaveWidth = Math.max(
+      minWidth,
+      Math.min(maxWidth, window.innerWidth)
+    );
+    this.circleWaveHeight = this.circleWaveWidth;
+
+    this.circleRotateWidth = this.circleWaveWidth;
+    this.circleRotateHeight = this.circleWaveHeight;
+
+    this.circleWaveCanvas.width = this.circleWaveWidth;
+    this.circleWaveCanvas.height = this.circleWaveHeight;
+
+    this.circleRotateCanvas.width = this.circleRotateWidth;
+    this.circleRotateCanvas.height = this.circleRotateHeight;
+
+    this.waveGroup.resize(this.circleWaveWidth, this.circleWaveHeight);
   }
 
   animate(time) {
-    this.ctx.clearRect(0, 0, this.stageWidth, this.stageHeight);
-    buildInnerCircle(this.stageWidth, this.stageHeight, circleWaveConfig);
-    this.waveGroup.draw(this.ctx);
-    buildOuterCircle(this.stageWidth, this.stageHeight, circleWaveConfig);
+    this.circleWaveCtx.clearRect(
+      0,
+      0,
+      this.circleWaveWidth,
+      this.circleWaveHeight
+    );
+    buildInnerCircle(
+      this.circleWaveWidth,
+      this.circleWaveHeight,
+      circleWaveConfig
+    );
+    this.waveGroup.draw(this.circleWaveCtx);
+    buildOuterCircle(
+      this.circleWaveWidth,
+      this.circleWaveHeight,
+      circleWaveConfig
+    );
+
+    this.circleRotateCtx.clearRect(
+      0,
+      0,
+      this.circleRotateWidth,
+      this.circleRotateHeight
+    );
+    buildRotateOuterCircle(
+      this.circleRotateWidth,
+      this.circleRotateHeight,
+      circleWaveConfig,
+      (rotate * Math.PI) / 180
+    );
+
     requestAnimationFrame(this.animate.bind(this));
   }
 }
@@ -248,48 +328,3 @@ class App {
 window.onload = () => {
   new App();
 };
-
-const circleRotateCanvas = document.getElementById("circleRotate");
-const circleRotateCanvasContext = circleRotateCanvas.getContext("2d");
-const circleRotateCanvasWidth = circleRotateCanvas.width;
-const circleRotateCanvasHeight = circleRotateCanvas.height;
-
-const buildRotateOuterCircle = (config, rotateAngle) => {
-  const { center, rotateCircle } = config;
-
-  circleRotateCanvasContext.beginPath();
-  circleRotateCanvasContext.arc(
-    center.x,
-    center.y,
-    rotateCircle.radius,
-    rotateCircle.angleStart + rotateAngle,
-    rotateCircle.angleEnd + rotateAngle,
-    false
-  );
-  circleRotateCanvasContext.lineWidth = rotateCircle.lineWidth;
-  circleRotateCanvasContext.strokeStyle = rotateCircle.strokeStyle;
-  circleRotateCanvasContext.stroke();
-};
-
-let rotate = 0;
-function loop() {
-  circleRotateCanvasContext.clearRect(
-    0,
-    0,
-    circleRotateCanvasWidth,
-    circleRotateCanvasHeight
-  );
-  circleRotateCanvasContext.translate(
-    circleWaveConfig.center.x,
-    circleWaveConfig.center.y
-  );
-  rotate++;
-  circleRotateCanvasContext.setLineDash([1, 135]);
-  circleRotateCanvasContext.setTransform(1, 0, 0, 1, 0, 0);
-
-  buildRotateOuterCircle(circleWaveConfig, (rotate * Math.PI) / 180);
-}
-
-setInterval(() => {
-  loop();
-}, 50);
