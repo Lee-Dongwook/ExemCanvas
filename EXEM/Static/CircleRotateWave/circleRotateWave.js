@@ -175,10 +175,10 @@ class Wave {
             파형의 아랫 부분을 렌더링하는 로직입니다.
         */
     ctx.lineTo(prevX, prevY);
-    // ctx.lineTo(
-    //   this.points[this.totalPoints - 1].x,
-    //   this.stageHeight - (circleRotateCanvasHeight / 1200) * 175
-    // );
+    ctx.lineTo(
+      this.points[this.totalPoints - 1].x,
+      this.stageHeight - (circleRotateCanvasHeight / 1200) * 175
+    );
     ctx.arcTo(
       this.stageWidth / 2,
       this.stageHeight -
@@ -187,10 +187,10 @@ class Wave {
       this.points[0].y,
       0
     );
-    // ctx.lineTo(
-    //   this.points[0].x,
-    //   this.stageHeight - (circleRotateCanvasHeight / 1200) * 175
-    // );
+    ctx.lineTo(
+      this.points[0].x,
+      this.stageHeight - (circleRotateCanvasHeight / 1200) * 175
+    );
     ctx.fill();
     ctx.closePath();
   }
@@ -238,9 +238,19 @@ class App {
     this.waveGroup = new WaveGroup();
 
     window.addEventListener("resize", this.resize.bind(this), false);
+    window.addEventListener(
+      "waveDataChange",
+      this.handleWaveDataChange.bind(this)
+    );
     this.resize();
 
     requestAnimationFrame(this.animate.bind(this));
+  }
+
+  handleWaveDataChange(event) {
+    const newWaveData = event.detail;
+    circleWaveConfig.wave.data = newWaveData;
+    this.resize();
   }
 
   resize() {
@@ -260,7 +270,15 @@ class App {
 }
 
 window.onload = () => {
-  new App();
+  const app = new App();
+
+  setInterval(() => {
+    const newWaveData = Math.floor(Math.random() * (100 - 20 + 1)) + 20;
+    console.log(newWaveData);
+    window.dispatchEvent(
+      new CustomEvent("waveDataChange", { detail: newWaveData })
+    );
+  }, 2000);
 };
 
 const circleRotateCanvas = document.getElementById("circleRotate");
